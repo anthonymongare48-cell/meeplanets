@@ -1,0 +1,2 @@
+import { AudioExpedition } from "@/components/FrontierSuite";
+export default function AudioExpeditionPage() { return <div className="page"><div className="section-heading"><span className="eyebrow">AUDIO JOURNAL / 013</span><h1>Beyond the <em>quiet</em></h1><p>An episodic expedition narrated by two explorers, with a transcript that keeps every detail readable.</p></div><AudioExpedition /></div>; }

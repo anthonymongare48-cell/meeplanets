@@ -1,0 +1,5 @@
+import { SectionHeading } from "@/components/SectionHeading";
+
+export default function CreatorPage() {
+  return <div className="page"><SectionHeading eyebrow="MISSION CONTROL / 006" title="Built for curious minds">COSMOS is an educational observatory for exploring our neighborhood in space.</SectionHeading><div className="history-grid"><article className="history-card"><span className="eyebrow">STACK</span><h2>Web platform</h2><p>Next.js App Router, React, TypeScript, Zustand, responsive CSS, Web Audio, and an accessible interactive simulator.</p></article><article className="history-card"><span className="eyebrow">STATUS</span><h2>Open for exploration</h2><p>Designed for classrooms, science communicators, and anyone who wants to turn astronomical data into an active experience.</p></article><article className="history-card"><span className="eyebrow">CONTACT</span><h2>Start a mission</h2><p>Bring COSMOS into a lesson, exhibition, or creative coding workshop.</p><a className="button" href="mailto:hello@cosmos.explorer">EMAIL THE CREATOR ↗</a></article></div></div>;
+}

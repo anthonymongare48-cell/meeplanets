@@ -1,0 +1,849 @@
+.planetary-science-lab {
+  margin: 72px 0 0;
+  padding: clamp(20px, 4vw, 42px);
+  overflow: hidden;
+  border: 1px solid #ffffff22;
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at 90% 0, #34466522, transparent 42%),
+    linear-gradient(145deg, #ffffff0d, #ffffff04);
+  box-shadow: inset 0 1px #ffffff0c, 0 24px 70px #0003;
+}
+
+.planetary-science-heading {
+  max-width: 730px;
+}
+
+.planetary-science-heading h2 {
+  margin: 12px 0;
+  font-size: clamp(34px, 6vw, 64px);
+  letter-spacing: -.065em;
+}
+
+.planetary-science-heading p {
+  max-width: 600px;
+  color: #a9aeb4;
+  line-height: 1.65;
+}
+
+.science-lab-tabs {
+  display: flex;
+  gap: clamp(13px, 2.4vw, 30px);
+  margin: 30px 0 0;
+  overflow-x: auto;
+  border-bottom: 1px solid #ffffff20;
+  scrollbar-width: none;
+}
+
+.science-lab-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.science-lab-tabs button {
+  position: relative;
+  flex: 0 0 auto;
+  padding: 14px 1px;
+  border: 0;
+  background: transparent;
+  color: #9097a2;
+  cursor: pointer;
+  font: 9px "DM Mono", monospace;
+  letter-spacing: .08em;
+}
+
+.science-lab-tabs button::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: var(--orange);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms ease;
+}
+
+.science-lab-tabs button:hover,
+.science-lab-tabs button.active {
+  color: #f1ede6;
+}
+
+.science-lab-tabs button.active::after {
+  transform: scaleX(1);
+}
+
+.science-lab-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, .9fr);
+  gap: clamp(24px, 5vw, 64px);
+  align-items: center;
+  min-height: 340px;
+  padding: 28px 0 18px;
+  animation: science-panel-in 240ms ease both;
+}
+
+.science-topic-copy {
+  align-self: center;
+}
+
+.science-topic-copy h3 {
+  margin: 12px 0;
+  font-size: clamp(24px, 3.5vw, 38px);
+  letter-spacing: -.045em;
+}
+
+.science-topic-copy > p {
+  max-width: 650px;
+  color: #b2b6be;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.science-topic-copy .science-caveat {
+  padding-left: 12px;
+  border-left: 2px solid #ff9c5466;
+  color: #969da8;
+  font-size: 11px;
+}
+
+.science-fact-chip,
+.science-tool-tags span {
+  display: inline-flex;
+  margin: 8px 6px 0 0;
+  padding: 8px 10px;
+  border: 1px solid #ffffff24;
+  border-radius: 3px;
+  color: #f1c18b;
+  font: 8px "DM Mono", monospace;
+  letter-spacing: .06em;
+}
+
+.science-planet-model {
+  position: relative;
+  display: grid;
+  min-height: 300px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #ffffff1c;
+  border-radius: 15px;
+  background: radial-gradient(ellipse at 50% 48%, color-mix(in srgb, var(--science-accent), transparent 84%), #080b12 70%);
+}
+
+.science-pressure-rings {
+  position: relative;
+  display: grid;
+  width: min(72%, 245px);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px dashed #ffffff24;
+  border-radius: 50%;
+}
+
+.science-pressure-layer {
+  position: absolute;
+  display: grid;
+  width: calc(100% - var(--pressure-index) * 14%);
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--science-accent), transparent 54%);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--science-accent), transparent 88%);
+  color: #e9e1d6;
+  cursor: pointer;
+  font: 7px "DM Mono", monospace;
+  text-align: center;
+  transition: background-color 200ms ease, box-shadow 200ms ease;
+}
+
+.science-pressure-layer span {
+  position: absolute;
+  right: -42%;
+  width: 40%;
+  color: #c1c5cc;
+  text-align: left;
+}
+
+.science-pressure-layer.core {
+  border-color: color-mix(in srgb, var(--science-accent), white 32%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--science-accent), #fff 24%), var(--science-accent));
+  box-shadow: 0 0 34px color-mix(in srgb, var(--science-accent), transparent 52%);
+}
+
+.science-pressure-arrow {
+  position: absolute;
+  right: 14px;
+  bottom: 13px;
+  color: #aeb4be;
+  font: 8px "DM Mono", monospace;
+  letter-spacing: .06em;
+}
+
+.science-choice-row {
+  display: flex;
+  grid-column: 1 / -1;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  padding-top: 13px;
+  border-top: 1px solid #ffffff18;
+}
+
+.science-choice-row > span {
+  margin-right: 8px;
+  color: #888f9a;
+  font: 8px "DM Mono", monospace;
+  letter-spacing: .07em;
+}
+
+.science-choice-row button {
+  padding: 8px 10px;
+  border: 1px solid #ffffff20;
+  border-radius: 2px;
+  background: #ffffff05;
+  color: #aeb4bd;
+  cursor: pointer;
+  font: 8px "DM Mono", monospace;
+  letter-spacing: .04em;
+  transition: color 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+.science-choice-row button:hover,
+.science-choice-row button.active {
+  border-color: #ff9c5477;
+  background: #ff7a2212;
+  color: #f3c18d;
+}
+
+.science-cloud-model {
+  display: grid;
+  gap: 16px;
+}
+
+.science-cloud-stack {
+  position: relative;
+  display: flex;
+  min-height: 270px;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 7px;
+  padding: 24px 20px 35px;
+  overflow: hidden;
+  border: 1px solid #ffffff1c;
+  border-radius: 14px;
+  background:
+    radial-gradient(ellipse at 50% 0, #768db322, transparent 52%),
+    linear-gradient(180deg, #101827, #090b10);
+}
+
+.science-cloud-stack::before {
+  position: absolute;
+  inset: 18px 20px 36px;
+  border: 1px dashed #ffffff22;
+  border-bottom: 0;
+  border-radius: 48% 48% 0 0;
+  content: "";
+  pointer-events: none;
+}
+
+.science-cloud-layer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 54px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 13px;
+  border: 1px solid color-mix(in srgb, var(--cloud-color), transparent 66%);
+  border-radius: 5px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--cloud-color), transparent 78%), #111722dd);
+  color: #eee8df;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.science-cloud-layer::before {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--cloud-color);
+  box-shadow: 0 0 9px var(--cloud-color);
+  content: "";
+}
+
+.science-cloud-layer span {
+  flex: 1;
+  font-size: 11px;
+}
+
+.science-cloud-layer small {
+  color: #9fa6b1;
+  font: 8px "DM Mono", monospace;
+}
+
+.science-cloud-layer.active {
+  border-color: var(--cloud-color);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--cloud-color), transparent 86%);
+  transform: translateX(4px);
+}
+
+.science-ground-line {
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  color: #9199a5;
+  font: 7px "DM Mono", monospace;
+  letter-spacing: .08em;
+}
+
+.science-cloud-detail {
+  min-height: 92px;
+}
+
+.science-cloud-detail h4 {
+  margin: 6px 0;
+  font-size: 16px;
+}
+
+.science-cloud-detail p {
+  margin: 0;
+  color: #aab1bb;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.science-action {
+  padding: 10px 12px;
+  border: 1px solid #ff9c5477;
+  background: #ff7a2212;
+  color: #f3c18d;
+  cursor: pointer;
+  font: 9px "DM Mono", monospace;
+  letter-spacing: .06em;
+}
+
+.magnetosphere-diagram {
+  position: relative;
+  display: grid;
+  min-height: 300px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #ffffff1c;
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 50% 50%, #23354b, #080b12 72%);
+}
+
+.magnetosphere-planet {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  width: 88px;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, #8bc4d2, #2871ad 48%, #102444 78%);
+  box-shadow: inset -12px -8px 16px #020818cc, 0 0 24px #6bc7f155;
+}
+
+.magnetosphere-planet span {
+  position: absolute;
+  inset: -14px;
+  border: 1px solid #86cff688;
+  border-radius: 50%;
+  box-shadow: 0 0 22px #5bbcff44;
+}
+
+.magnetosphere-field {
+  position: absolute;
+  z-index: 2;
+  left: 51%;
+  width: 37%;
+  height: 51%;
+  border: 1px solid #77c3ed66;
+  border-left: 0;
+  border-radius: 0 50% 50% 0;
+  transform: translateX(-4%);
+}
+
+.field-two {
+  width: 48%;
+  height: 69%;
+  border-color: #77c3ed42;
+}
+
+.field-three {
+  width: 60%;
+  height: 88%;
+  border-color: #77c3ed24;
+}
+
+.solar-wind-label,
+.magnetic-status,
+.mars-comparison {
+  position: absolute;
+  z-index: 4;
+  color: #c8d8e4;
+  font: 8px "DM Mono", monospace;
+  letter-spacing: .08em;
+}
+
+.solar-wind-label {
+  top: 14px;
+  left: 14px;
+}
+
+.magnetic-status {
+  right: 14px;
+  bottom: 30px;
+  color: #a4d9f3;
+}
+
+.mars-comparison {
+  bottom: 13px;
+  left: 14px;
+  color: #d4a18a;
+  font-size: 7px;
+}
+
+.solar-wind-particles {
+  position: absolute;
+  z-index: 3;
+  inset: 16% 52% 22% 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.solar-wind-particles i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffbd73;
+  box-shadow: 0 0 10px #ff9f50;
+  animation: particle-drift 2.4s linear infinite;
+}
+
+.solar-wind-particles i:nth-child(even) {
+  animation-delay: -1.2s;
+}
+
+.wind-paused .solar-wind-particles i {
+  animation-play-state: paused;
+}
+
+.wind-paused .magnetosphere-field {
+  border-color: #e47d5c66;
+}
+
+.spectral-instrument {
+  padding: 17px;
+  border: 1px solid #ffffff20;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #151a22, #090b10);
+}
+
+.spectral-toolbar,
+.spectrum-scale {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: #9aa3af;
+  font: 7px "DM Mono", monospace;
+  letter-spacing: .06em;
+}
+
+.spectrum-display {
+  position: relative;
+  display: flex;
+  height: 160px;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 4px;
+  margin: 16px 0 8px;
+  padding: 7px 8px 0;
+  overflow: hidden;
+  border-bottom: 1px solid #ffffff36;
+  background:
+    linear-gradient(180deg, transparent 23%, #ffffff0a 24%, transparent 25% 49%, #ffffff0a 50%, transparent 51% 74%, #ffffff0a 75%, transparent 76%),
+    #080b10;
+}
+
+.spectrum-line {
+  position: absolute;
+  top: 28%;
+  right: 8px;
+  left: 8px;
+  height: 45%;
+  background: linear-gradient(180deg, #ffbf77, #f8dfb6 70%, #d9855e);
+  filter: drop-shadow(0 0 5px #ffb362);
+  clip-path: polygon(0 57%,4% 54%,8% 59%,12% 48%,16% 53%,20% 40%,24% 48%,28% 37%,32% 45%,36% 34%,40% 40%,44% 28%,48% 36%,52% 29%,56% 40%,60% 34%,64% 46%,68% 40%,72% 51%,76% 44%,80% 57%,84% 49%,88% 58%,92% 50%,96% 59%,100% 53%,100% 100%,0 100%);
+}
+
+.spectrum-display i {
+  position: relative;
+  z-index: 1;
+  width: 2px;
+  height: var(--spectrum-height);
+  margin-top: auto;
+  background: #10131a;
+  box-shadow: 0 0 4px #050609;
+  transform: translateY(1px);
+}
+
+.spectrum-scale {
+  color: #818a97;
+}
+
+.spectral-molecules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin: 16px 0;
+}
+
+.spectral-molecules span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #b5bcc5;
+  font: 8px "DM Mono", monospace;
+}
+
+.spectral-molecules i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--molecule-color);
+  box-shadow: 0 0 8px var(--molecule-color);
+}
+
+.spectral-instrument .science-choice-row {
+  gap: 5px;
+}
+
+.spectral-instrument .science-choice-row button {
+  padding: 7px 8px;
+  font-size: 7px;
+}
+
+.phenomena-explorer {
+  display: grid;
+  grid-template-columns: minmax(230px, .9fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 5vw, 64px);
+  padding: 28px 0 18px;
+  animation: science-panel-in 240ms ease both;
+}
+
+.phenomena-index {
+  max-height: 430px;
+  overflow: auto;
+  border-top: 1px solid #ffffff1b;
+  scrollbar-width: thin;
+}
+
+.phenomena-index button {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  width: 100%;
+  gap: 5px 10px;
+  padding: 12px 10px;
+  border: 0;
+  border-bottom: 1px solid #ffffff1b;
+  background: transparent;
+  color: #9da4ae;
+  cursor: pointer;
+  text-align: left;
+}
+
+.phenomena-index button > span {
+  grid-row: span 2;
+  color: #d58d54;
+  font: 8px "DM Mono", monospace;
+}
+
+.phenomena-index button strong {
+  color: #d0d2d6;
+  font: 9px "DM Mono", monospace;
+}
+
+.phenomena-index button small {
+  color: #808894;
+  font: 7px "DM Mono", monospace;
+}
+
+.phenomena-index button:hover,
+.phenomena-index button.active {
+  background: #ffffff09;
+}
+
+.phenomena-index button.active strong {
+  color: #f3c18d;
+}
+
+.phenomenon-detail {
+  position: relative;
+  display: flex;
+  min-height: 300px;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(20px, 4vw, 36px);
+  overflow: hidden;
+  border: 1px solid #ffffff1b;
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 85% 85%, #cc7b3830, transparent 48%), #0b0e14;
+}
+
+.phenomenon-detail h3 {
+  position: relative;
+  z-index: 1;
+  margin: 14px 0;
+  font-size: clamp(24px, 3.4vw, 38px);
+  letter-spacing: -.045em;
+}
+
+.phenomenon-detail p {
+  position: relative;
+  z-index: 1;
+  max-width: 530px;
+  color: #b5bbc4;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.phenomenon-orbit {
+  position: absolute;
+  right: -45px;
+  bottom: -87px;
+  width: 240px;
+  aspect-ratio: 1;
+  border: 1px solid #ffffff21;
+  border-radius: 50%;
+}
+
+.phenomenon-orbit::before,
+.phenomenon-orbit::after {
+  position: absolute;
+  inset: 19%;
+  border: 1px solid #ffffff20;
+  border-radius: 50%;
+  content: "";
+}
+
+.phenomenon-orbit::after {
+  inset: 37%;
+}
+
+.phenomenon-orbit i,
+.phenomenon-orbit b,
+.phenomenon-orbit span {
+  position: absolute;
+  z-index: 1;
+  width: 13px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #d99156;
+  box-shadow: 0 0 20px #d9915688;
+}
+
+.phenomenon-orbit i { top: 14%; left: 29%; }
+.phenomenon-orbit b { top: 45%; left: 8%; width: 8px; background: #a4b9cb; }
+.phenomenon-orbit span { top: 54%; left: 40%; width: 5px; background: #d6c6ad; }
+
+.ocean-world-panel {
+  align-items: center;
+}
+
+.ocean-world-visual {
+  position: relative;
+  display: grid;
+  min-height: 300px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid #ffffff1d;
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 50% 52%, color-mix(in srgb, var(--moon-accent), transparent 80%), #080b12 72%);
+}
+
+.ocean-moon {
+  position: relative;
+  z-index: 2;
+  width: min(52%, 170px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid #ffffff40;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, color-mix(in srgb, var(--moon-accent), white 25%), var(--moon-accent) 52%, #202b38 86%);
+  box-shadow: inset -19px -12px 26px #02040ac9, 0 0 36px color-mix(in srgb, var(--moon-accent), transparent 63%);
+}
+
+.ocean-moon::before {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, transparent 48%, #05080c88);
+  content: "";
+}
+
+.ocean-crust,
+.ocean-layer,
+.ocean-rock {
+  position: absolute;
+  left: 50%;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+
+.ocean-crust {
+  bottom: -40%;
+  width: 128%;
+  height: 85%;
+  border: 1px solid #ffffffad;
+  background: repeating-linear-gradient(125deg, #f2f5ee, #cbd2d0 8px, #e8ece8 14px);
+}
+
+.ocean-layer {
+  bottom: -62%;
+  width: 108%;
+  height: 85%;
+  border: 1px solid #56c9db;
+  background: radial-gradient(ellipse at top, #38b2cc, #103c65);
+  box-shadow: 0 0 20px #53d6f344;
+}
+
+.ocean-rock {
+  bottom: -78%;
+  width: 76%;
+  height: 74%;
+  background: #705f55;
+}
+
+.moon-enceladus .ocean-crust {
+  background: repeating-linear-gradient(100deg, #f4f3e8, #b5c3c8 5px, #f3eee0 10px);
+}
+
+.moon-titan .ocean-crust {
+  background: repeating-linear-gradient(140deg, #ce9b5d, #735744 8px, #d2a86c 15px);
+}
+
+.tidal-pull {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  width: 44%;
+  height: 68%;
+  border: 1px solid #82ceef40;
+  border-radius: 50%;
+  transform: translateX(-50%) scaleX(1.5);
+}
+
+.tidal-right {
+  width: 56%;
+  height: 82%;
+  border-color: #82ceef25;
+  transform: translateX(-50%) scaleX(1.5);
+}
+
+.tidal-caption {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  color: #b8c9d3;
+  font: 7px "DM Mono", monospace;
+  letter-spacing: .08em;
+  text-align: center;
+}
+
+.ocean-data-points {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.ocean-data-points span {
+  padding: 11px;
+  border: 1px solid #ffffff1b;
+  background: #ffffff05;
+}
+
+.ocean-data-points small,
+.ocean-data-points strong {
+  display: block;
+}
+
+.ocean-data-points small {
+  margin-bottom: 6px;
+  color: #8f97a2;
+  font: 7px "DM Mono", monospace;
+}
+
+.ocean-data-points strong {
+  color: #e0ded9;
+  font-size: 10px;
+}
+
+.science-topic-copy .science-mission-note {
+  padding: 12px;
+  border-left: 2px solid #82b8d9;
+  background: #83c8ec0b;
+  color: #b8c5cf;
+  font-size: 10px;
+}
+
+.planetary-science-caveat {
+  margin: 18px 0 0;
+  padding-top: 13px;
+  border-top: 1px solid #ffffff18;
+  color: #868e99;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+@keyframes science-panel-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes particle-drift {
+  0% { transform: translateX(-5px); opacity: .25; }
+  45% { opacity: 1; }
+  100% { transform: translateX(32px); opacity: .3; }
+}
+
+@media (max-width: 760px) {
+  .science-lab-panel,
+  .phenomena-explorer {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .science-planet-model,
+  .science-cloud-stack,
+  .magnetosphere-diagram,
+  .spectral-instrument,
+  .phenomenon-detail,
+  .ocean-world-visual {
+    min-height: 250px;
+  }
+
+  .science-choice-row {
+    grid-column: 1;
+  }
+
+  .phenomena-index {
+    max-height: 270px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .planetary-science-lab *,
+  .planetary-science-lab *::before,
+  .planetary-science-lab *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

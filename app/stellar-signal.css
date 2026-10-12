@@ -1,0 +1,141 @@
+.stellar-signal {
+  --signal-cyan: #65d9ea;
+  --signal-muted: #728995;
+  margin: 0 0 22px;
+  padding: 22px;
+  border: 1px solid #65d9ea33;
+  background:
+    radial-gradient(ellipse at 14% 28%, #14334b44, transparent 36%),
+    linear-gradient(145deg, #08151e, #071018 70%);
+  color: #c5e5ec;
+  font-family: "DM Mono", monospace;
+  box-shadow: inset 0 1px #ffffff0b, 0 16px 40px #0003;
+}
+
+.stellar-signal__header,
+.stellar-signal__panel-heading,
+.stellar-signal__chart-heading,
+.stellar-signal__chart-axis {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.stellar-signal__header {
+  padding-bottom: 18px;
+  border-bottom: 1px solid #65d9ea30;
+}
+
+.stellar-signal__header .eyebrow { color: var(--signal-cyan); }
+.stellar-signal__header h2 { margin: 8px 0 0; font: 500 clamp(24px, 3vw, 38px)/1 "DM Mono", monospace; letter-spacing: -.07em; }
+
+.stellar-signal__status,
+.stellar-signal__panel-heading > span {
+  color: #83a8b6;
+  font-size: 9px;
+  letter-spacing: .1em;
+}
+
+.stellar-signal__status { display: flex; align-items: center; gap: 8px; }
+.stellar-signal__status i { width: 7px; height: 7px; border-radius: 50%; background: #7ddeb0; box-shadow: 0 0 12px #7ddeb0; }
+
+.stellar-signal__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 14px; }
+.stellar-signal__panel { min-width: 0; border: 1px solid #65d9ea27; background: #07131ddd; }
+.stellar-signal__panel-heading { align-items: flex-start; padding: 14px 16px; border-bottom: 1px solid #65d9ea24; }
+.stellar-signal__panel-heading div > span { color: var(--signal-cyan); font-size: 9px; letter-spacing: .08em; }
+.stellar-signal__panel-heading h3 { margin: 6px 0 0; color: #d1eaf0; font: 400 16px "DM Mono", monospace; }
+.stellar-signal__panel-heading > span { padding: 4px 6px; border: 1px solid #65d9ea30; font-size: 8px; white-space: nowrap; }
+
+.stellar-signal__sky {
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 16% 47%, #ffffffaa 0 1px, transparent 2px),
+    radial-gradient(circle at 42% 24%, #ffffff99 0 1px, transparent 2px),
+    radial-gradient(circle at 76% 73%, #ffffff99 0 1px, transparent 2px),
+    radial-gradient(circle at 90% 26%, #ffffff77 0 1px, transparent 2px),
+    linear-gradient(90deg, #0c1c27, #101823);
+  background-size: 78px 61px, 113px 92px, 96px 77px, 137px 101px, auto;
+}
+
+.stellar-signal__star {
+  position: absolute;
+  z-index: 1;
+  left: 15%;
+  top: 50%;
+  width: 86px;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #fffce3 0 18%, #ffe099 35%, #ff9b4c 60%, #f56a28 69%, transparent 72%);
+  box-shadow: 0 0 25px 9px #ffb85877, 0 0 70px 25px #ff913333;
+}
+
+.stellar-signal__beam { position: absolute; z-index: 0; left: 17%; width: 80%; height: 0; border-top: 1px dashed #69dced77; transform-origin: left; }
+.stellar-signal__beam--upper { top: 50%; transform: rotate(-11deg); }
+.stellar-signal__beam--lower { top: 50%; transform: rotate(11deg); }
+
+.stellar-signal__shadow {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  width: 38px;
+  height: 38px;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--occulting-color, #9abec7);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, var(--occulting-color, #54616b), #091017 72%);
+  box-shadow: 0 0 0 12px #65d9ea12, 0 0 0 28px #65d9ea09;
+  transition: left .08s linear;
+}
+
+.stellar-signal__shadow i { position: absolute; top: 20px; left: 30px; width: 110px; height: 68px; background: linear-gradient(90deg, #ffe88414, transparent); clip-path: polygon(0 38%, 100% 0, 100% 100%, 0 62%); }
+.stellar-signal__label { position: absolute; z-index: 3; font-size: 9px; }
+.stellar-signal__label--umbra { left: 57%; top: 54%; color: #f7d979; }
+.stellar-signal__label--penumbra { left: 74%; top: 32%; color: var(--signal-cyan); }
+.stellar-signal__axis { position: absolute; left: 16px; bottom: 12px; color: #73909d; font-size: 8px; letter-spacing: .1em; }
+
+.stellar-signal__slider { display: block; padding: 12px 16px 6px; color: #8ba9b2; font-size: 9px; letter-spacing: .05em; }
+.stellar-signal__slider output { float: right; color: #e6f7f9; }
+.stellar-signal__slider input { display: block; width: 100%; margin: 10px 0 0; accent-color: var(--signal-cyan); }
+
+.stellar-signal__chart-heading { padding: 12px 16px 5px; color: #8ba9b2; font-size: 9px; letter-spacing: .06em; }
+.stellar-signal__chart-heading strong { color: #e6f7f9; font-size: 14px; font-weight: 400; }
+.stellar-signal__chart-heading small { color: #7797a2; font-size: 8px; }
+.stellar-signal__chart { display: block; width: calc(100% - 32px); height: 84px; margin: 5px 16px 0; overflow: visible; border: 1px solid #65d9ea1c; background: repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), #65d9ea13 calc(10% - 1px) 10%); }
+.stellar-signal__chart line { stroke: #65d9ea22; stroke-width: .4; vector-effect: non-scaling-stroke; }
+.stellar-signal__chart path { fill: none; stroke: #66ddec; stroke-width: 1.8; vector-effect: non-scaling-stroke; }
+.stellar-signal__chart-axis { padding: 5px 16px 12px; color: #6e8995; font-size: 8px; }
+
+.stellar-signal__network { height: 234px; position: relative; overflow: hidden; background: radial-gradient(ellipse, #123042aa, #08131b 70%); }
+.stellar-signal__network > svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.stellar-signal__network > svg path { fill: none; stroke: #37617688; stroke-width: 1; }
+.stellar-signal__network > svg .stellar-signal__signal-path { stroke: var(--signal-cyan); stroke-width: 1.5; stroke-dasharray: 3 5; animation: stellar-signal-flow 6s linear infinite; }
+.stellar-signal__node { position: absolute; display: flex; align-items: center; gap: 5px; transform: translate(-50%, -50%); }
+.stellar-signal__node > i { width: 17px; height: 17px; flex: 0 0 auto; border: 1px solid #75e7f4; border-radius: 50%; box-shadow: 0 0 0 5px #65d9ea20, 0 0 20px #65d9ea9c; background: #ffca7d; }
+.stellar-signal__node--2 > i { width: 24px; height: 24px; background: #ffa549; }
+.stellar-signal__node--3 > i,.stellar-signal__node--4 > i { width: 11px; height: 11px; background: #77dff0; }
+.stellar-signal__node span { color: #cfebef; font-size: 8px; white-space: nowrap; text-shadow: 0 1px 4px #000; }
+.stellar-signal__node small { display: block; margin-top: 3px; color: #7697a3; font-size: 6px; }
+
+.stellar-signal__mode-row { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px 0; }
+.stellar-signal__mode-row button { padding: 6px 8px; border: 1px solid #65d9ea29; background: transparent; color: #91acb5; font: 8px "DM Mono", monospace; cursor: pointer; }
+.stellar-signal__mode-row button.is-active { border-color: var(--signal-color); color: var(--signal-color); background: color-mix(in srgb, var(--signal-color) 10%, transparent); }
+.stellar-signal__mode-row button:last-child { margin-left: auto; }
+.stellar-signal__chart--wave { height: 74px; }
+.stellar-signal__note { padding: 0 16px 12px; margin: 8px 0 0; color: #718995; font: 9px/1.5 "DM Mono", monospace; }
+
+@keyframes stellar-signal-flow { to { stroke-dashoffset: -48; } }
+
+@media (max-width: 760px) {
+  .stellar-signal { padding: 14px; }
+  .stellar-signal__grid { grid-template-columns: 1fr; }
+  .stellar-signal__status { font-size: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stellar-signal__network > svg .stellar-signal__signal-path { animation: none; }
+  .stellar-signal__shadow { transition: none; }
+}

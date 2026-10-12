@@ -1,0 +1,137 @@
+.space-missions {
+  margin: 5rem 0;
+}
+
+.space-missions-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.75fr);
+  align-items: end;
+  gap: 1rem 3rem;
+  margin-bottom: 2rem;
+}
+
+.space-missions-heading .eyebrow {
+  grid-column: 1 / -1;
+}
+
+.space-missions-heading h2 {
+  margin: 0;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 0.95;
+  letter-spacing: -0.07em;
+}
+
+.space-missions-heading h2 em {
+  color: var(--orange);
+  font-style: normal;
+}
+
+.space-missions-heading p {
+  max-width: 38rem;
+  margin: 0 0 0.3rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.8;
+}
+
+.space-mission-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.space-mission-card {
+  overflow: hidden;
+  border: 1px solid #ffffff1c;
+  background: linear-gradient(145deg, #ffffff0d, #ffffff04);
+  box-shadow: inset 0 1px #ffffff0b, 0 12px 32px #0002;
+}
+
+.space-mission-visual {
+  position: relative;
+  height: clamp(180px, 25vw, 300px);
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 70%, #172538, #07090e 75%);
+}
+
+.space-mission-visual img {
+  object-fit: cover;
+  transition: transform 600ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.space-mission-card:hover .space-mission-visual img {
+  transform: scale(1.035);
+}
+
+.jwst-visual svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.space-mission-index,
+.space-mission-kind {
+  position: absolute;
+  z-index: 1;
+  top: 0.8rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #ffffff24;
+  background: #080b11bd;
+  color: #e8e1d6;
+  font: 9px var(--mono);
+  letter-spacing: 0.08em;
+  backdrop-filter: blur(10px);
+}
+
+.space-mission-index {
+  left: 0.8rem;
+  color: #f1b36b;
+}
+
+.space-mission-kind {
+  right: 0.8rem;
+}
+
+.space-mission-copy {
+  padding: clamp(1rem, 3vw, 1.6rem);
+}
+
+.space-mission-copy h3 {
+  margin: 0 0 0.6rem;
+  font-size: clamp(1.35rem, 2.7vw, 2rem);
+  letter-spacing: -0.045em;
+}
+
+.space-mission-stat {
+  color: #f1b36b;
+  font: 9px var(--mono);
+  letter-spacing: 0.08em;
+}
+
+.space-mission-copy p {
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 0.83rem;
+  line-height: 1.75;
+}
+
+@media (max-width: 700px) {
+  .space-missions-heading,
+  .space-mission-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .space-missions-heading {
+    gap: 1rem;
+  }
+
+  .space-mission-visual {
+    height: 230px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .space-mission-visual img {
+    transition: none;
+  }
+}

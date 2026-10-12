@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./interaction-effects.css";
+import "./space-science-missions.css";
+import "./mission-operations.css";
+import "./stellar-signal.css";
+import "./simulation-matrix.css";
+import "./shared-astronomy-model.css";
+import "./planet-interior.css";
+import "./planetary-science.css";
 import { Navigation } from "@/components/Navigation";
 import { SceneDirector } from "@/components/SceneDirector";
 

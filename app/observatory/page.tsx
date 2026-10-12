@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { SectionHeading } from "@/components/SectionHeading";
+import { SpaceScienceMissions } from "@/components/SpaceScienceMissions";
+import { SharedAstronomyModel } from "@/components/SharedAstronomyModel";
 
 type Feed = { name: string; status: string; detail: string };
 
@@ -32,6 +34,7 @@ export default function ObservatoryPage() {
   const era = date < 1970 ? "PRE-SPACEFLIGHT" : date < 2000 ? "EXPLORATION ERA" : "CURRENT ERA";
   return <div className="page">
     <SectionHeading eyebrow="OBSERVATORY / 010" title="Time & signal">Scrub through mission history, reveal the night-sky geometry, and inspect live feeds.</SectionHeading>
+    <SharedAstronomyModel />
     <section className="lab-visual">
       <div>
         <span className="eyebrow">HISTORICAL TIMELINE</span>
@@ -52,6 +55,7 @@ export default function ObservatoryPage() {
       </div>
       <div className="history-card"><span className="eyebrow">ORBITAL MECHANICS</span><h2>Kepler / N-body sandbox</h2><p>Increase the test mass to see how a simplified gravitational perturbation changes the displayed orbit.</p><input type="range" min="1" max="10" value={mass} onChange={(event) => setMass(Number(event.target.value))} aria-label="Test mass" /><strong>{mass}× test mass · {mass === 1 ? "stable reference" : `${(mass * 4.2).toFixed(1)}% perturbation`}</strong></div>
     </section>
+    <SpaceScienceMissions />
     <section><div className="lab-toolbar"><span className="eyebrow">LIVE TELEMETRY</span><span className="muted">Network data uses an explicit offline fallback.</span></div><div className="history-grid">{feed.map((item) => <article className="history-card" key={item.name}><span className="eyebrow">{item.status}</span><h2>{item.name}</h2><p>{item.detail}</p></article>)}</div></section>
   </div>;
 }

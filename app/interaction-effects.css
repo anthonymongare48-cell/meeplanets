@@ -1,0 +1,556 @@
+.orbit-stage {
+  isolation: isolate;
+  container-type: inline-size;
+  cursor: grab;
+  touch-action: none;
+  transform: none;
+}
+
+.solar-system-scene {
+  position: absolute;
+  inset: 0;
+}
+
+.solar-system-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  outline: none;
+}
+
+.solar-system-error {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  color: #f1c993;
+  font: 12px/1.7 var(--mono);
+  text-align: center;
+}
+
+.orbit-overlay-controls {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.orbit-overlay-button {
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #ffffff2b;
+  background: #0b0d13b8;
+  color: #e9e4dc;
+  font: 9px var(--mono);
+  letter-spacing: 0.08em;
+  backdrop-filter: blur(12px);
+}
+
+.orbit-overlay-button:hover,
+.orbit-overlay-button.active {
+  border-color: #e59b4d99;
+  color: #f0b66f;
+}
+
+.orbit-control-deck {
+  grid-column: 1;
+  display: grid;
+  grid-template-columns: auto minmax(100px, 1fr);
+  align-items: center;
+  gap: 0.55rem 1rem;
+  padding: 0.75rem 1rem 1rem;
+  border-top: 1px solid #ffffff12;
+  background: #ffffff08;
+}
+
+.orbit-control-label,
+.orbit-control-range {
+  color: #9298a2;
+  font: 9px var(--mono);
+  letter-spacing: 0.08em;
+}
+
+.orbit-control-label strong {
+  margin-left: 0.35rem;
+  color: #f0b66f;
+  font-size: 11px;
+}
+
+.orbit-speed-slider {
+  width: 100%;
+  accent-color: #e59b4d;
+}
+
+.orbit-control-range {
+  grid-column: 2;
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+}
+
+.orbit-control-range span {
+  text-align: center;
+}
+
+.orbit-speed-presets {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.orbit-speed-presets button {
+  min-width: 3.4rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #ffffff1c;
+  background: #0b0d1380;
+  color: #aeb3bc;
+  font: 9px var(--mono);
+}
+
+.orbit-speed-presets button:hover,
+.orbit-speed-presets button.active {
+  border-color: #e59b4d99;
+  color: #f0b66f;
+}
+
+.orbit-stage:active {
+  cursor: grabbing;
+}
+
+.planet-visual-saturn .planet-sphere.has-photo {
+  width: min(100%, 460px);
+  height: auto;
+  aspect-ratio: 16 / 9;
+  overflow: visible;
+  border: 1px solid #ffffff1c;
+  border-radius: 16px;
+  background: #020304;
+  box-shadow: 0 24px 65px #0009, 0 0 48px #c6aa7c20;
+}
+
+.planet-sphere-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+  animation: planet-photo-turn 42s linear infinite;
+}
+
+.planet-visual-jupiter .planet-sphere-photo {
+  object-fit: cover;
+}
+
+.planet-visual-saturn .planet-sphere-photo {
+  object-fit: contain;
+}
+
+.planet-dot {
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.sim-planet span {
+  background-color: var(--color);
+  background-image:
+    radial-gradient(ellipse at 30% 24%, #ffffff44, transparent 42%),
+    linear-gradient(90deg, #08090c88, #ffffff10 52%, #050609a8),
+    var(--planet-photo, none);
+  background-position: center, center, var(--planet-photo-position, center);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.sim-planet.planet-saturn::before {
+  position: absolute;
+  z-index: -1;
+  top: 9%;
+  left: -62%;
+  width: 224%;
+  height: 82%;
+  border: 2px solid #d9c18d99;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #e7d3a355, inset 0 0 6px #e7d3a333;
+  content: "";
+  pointer-events: none;
+  transform: rotate(-18deg);
+}
+
+.flight-planet {
+  background-color: var(--flight-color);
+  background-image:
+    radial-gradient(circle at 34% 27%, #ffffff40, transparent 34%),
+    linear-gradient(90deg, #07090c88, transparent 48%, #050609b8),
+    var(--flight-photo, none);
+  background-position: center, center, var(--flight-photo-position, center);
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@keyframes planet-photo-turn {
+  to { transform: rotate(360deg); }
+}
+
+.orbit-stage:active {
+  cursor: grabbing;
+}
+
+.orbit-track {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--orbit-diameter);
+  height: auto;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  pointer-events: none;
+  animation: orbit-revolution var(--orbit-period) linear var(--orbit-delay) infinite;
+  will-change: transform;
+}
+
+.orbit-scene {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(100%, 520px);
+  height: auto;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%) perspective(1000px)
+    rotateX(calc(var(--camera-rotate-x, 0deg) + var(--camera-default-x, 7deg)))
+    rotateY(var(--camera-rotate-y, -10deg))
+    scale(var(--orbit-zoom, 1));
+  transform-style: preserve-3d;
+  transition: transform 240ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.orbit-plane {
+  position: absolute;
+  inset: 0;
+  --orbital-tilt: 0deg;
+  transform-style: preserve-3d;
+  transform: rotateX(var(--orbital-tilt));
+  transition: transform 300ms ease;
+}
+
+.orbit-stage.orbit-3d .orbit-plane {
+  --orbital-tilt: 28deg;
+}
+
+.orbit-stage.orbit-3d .orbit-plane .orbit-line {
+  transform: translate(-50%, -50%);
+}
+
+.orbit-stage.orbit-3d .orbit-scene {
+  --camera-default-x: 0deg;
+  --camera-rotate-y: 0deg;
+}
+
+.sim-planet {
+  top: 50%;
+  left: 100%;
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+  pointer-events: auto;
+}
+
+.orbit-stage.orbit-3d .sim-planet {
+  transform: translate(-50%, -50%) rotateX(calc(var(--orbital-tilt) * -1));
+}
+
+.sim-planet span {
+  animation: planet-axis-turn var(--rotation-period) linear infinite;
+  will-change: transform;
+}
+
+@keyframes orbit-revolution {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes planet-axis-turn {
+  to { transform: rotate(360deg); }
+}
+
+.orbit-stage.orbit-2d .orbit-scene {
+  --camera-default-x: 0deg;
+  --camera-rotate-y: 0deg;
+}
+
+.orbit-stage.orbit-2d .orbit-line {
+  transform: translate(-50%, -50%);
+}
+
+.orbit-line {
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.simulator-shell button,
+.simulator-shell a,
+.button,
+.outline-btn,
+.small-btn,
+.text-button,
+.menu-button,
+.audio-toggle {
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.planet-card {
+  isolation: isolate;
+  overflow: hidden;
+  transition: background-color 220ms ease, border-color 220ms ease, transform 220ms ease;
+}
+
+.planet-card::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 110%, #ff6b2226, transparent 65%);
+  content: "";
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.planet-dot {
+  box-shadow: 0 0 18px color-mix(in srgb, currentColor, transparent 62%);
+  transition: transform 300ms cubic-bezier(.2, .8, .2, 1), box-shadow 300ms ease;
+}
+
+.planet-card-cta {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  left: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 12px;
+  border: 1px solid #ff6b22;
+  background: #ff6b22;
+  color: #100c09;
+  font: 10px "DM Mono", monospace;
+  letter-spacing: .06em;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 200ms ease, transform 220ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.planet-card-cta b {
+  font-size: 16px;
+}
+
+.planet-card:hover,
+.planet-card:focus-visible {
+  background: #161310;
+  border-color: #ff6b2266;
+}
+
+.planet-card:hover::before,
+.planet-card:focus-visible::before {
+  opacity: 1;
+}
+
+.planet-card:hover .planet-dot,
+.planet-card:focus-visible .planet-dot {
+  transform: scale(1.18);
+  box-shadow: 0 0 26px #ff6b2270;
+}
+
+.planet-card:hover .planet-card-cta,
+.planet-card:focus-visible .planet-card-cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.button:hover,
+.outline-btn:hover,
+.small-btn:hover,
+.text-button:hover {
+  box-shadow: 0 0 22px #ff6b2230;
+  transform: translateY(-1px);
+}
+
+.nav-menu {
+  position: fixed;
+  z-index: 30;
+  top: 76px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  align-content: center;
+  overflow: auto;
+  padding: clamp(28px, 7vh, 76px) clamp(24px, 9vw, 140px);
+  border: 0;
+  border-top: 1px solid #ffffff20;
+  background:
+    radial-gradient(ellipse at 82% 18%, #ff6b2212, transparent 36%),
+    #08090bf5;
+  animation: menu-reveal 280ms cubic-bezier(.2, .7, .2, 1) both;
+}
+
+.nav-menu-grid {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  grid-template-columns: 1fr 1.7fr .8fr;
+  gap: clamp(24px, 6vw, 90px);
+}
+
+.nav-menu-grid > div {
+  align-self: start;
+}
+
+.nav-menu-grid a {
+  padding: 12px 0;
+  font-size: 13px;
+  transition: color 160ms ease, padding-left 160ms ease;
+}
+
+.nav-menu-grid a:hover,
+.nav-menu-grid a:focus-visible {
+  padding-left: 5px;
+  color: var(--orange);
+}
+
+.learning-tab {
+  position: relative;
+  transition: color 180ms ease, background-color 180ms ease;
+}
+
+.learning-tab::after {
+  position: absolute;
+  right: 12px;
+  bottom: -1px;
+  left: 12px;
+  height: 2px;
+  background: var(--orange);
+  content: "";
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+}
+
+.learning-tab.active::after {
+  transform: scaleX(1);
+}
+
+.learning-layer article {
+  animation: tab-content-in 260ms ease both;
+}
+
+.planet-hero .planet-sphere {
+  position: relative;
+  isolation: isolate;
+  animation: planet-turn 36s linear infinite;
+}
+
+.planet-hero .planet-sphere::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: repeating-linear-gradient(
+    8deg,
+    transparent 0 18px,
+    #ffffff16 19px 21px,
+    transparent 22px 37px
+  );
+  content: "";
+  mask-image: linear-gradient(90deg, transparent, #000 35%, #000 68%, transparent);
+  animation: planet-clouds 28s linear infinite;
+}
+
+.sun {
+  animation: star-breathe 5s ease-in-out infinite;
+}
+
+.orbit i,
+.orbit b {
+  animation: hero-planet-drift 4s ease-in-out infinite alternate;
+}
+
+.orbit b {
+  animation-delay: -1.7s;
+}
+
+.sim-sun {
+  animation: star-breathe 4s ease-in-out infinite;
+}
+
+.orbit-line {
+  box-shadow: 0 0 14px #ffb66b08;
+}
+
+@keyframes menu-reveal {
+  from { opacity: 0; clip-path: inset(0 0 100%); }
+  to { opacity: 1; clip-path: inset(0); }
+}
+
+@keyframes tab-content-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes planet-turn {
+  to { filter: hue-rotate(18deg); }
+}
+
+@keyframes planet-clouds {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes star-breathe {
+  50% { filter: brightness(1.16); }
+}
+
+@keyframes hero-planet-drift {
+  to { margin-top: 8px; }
+}
+
+@media (max-width: 700px) {
+  .nav-menu {
+    top: 64px;
+    align-content: start;
+    padding: 30px 6vw;
+  }
+
+  .nav-menu-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-menu,
+  .learning-layer article {
+    animation: none;
+  }
+
+  .planet-hero .planet-sphere,
+  .planet-hero .planet-sphere::before,
+  .planet-sphere-photo,
+  .sun,
+  .sim-sun,
+  .orbit i,
+  .orbit b {
+    animation: none;
+  }
+
+  .orbit-track,
+  .sim-planet span {
+    animation: none;
+  }
+
+  .orbit-scene,
+  .planet-card,
+  .planet-card-cta,
+  .planet-dot,
+  .learning-tab::after {
+    transition-duration: .01ms !important;
+  }
+}

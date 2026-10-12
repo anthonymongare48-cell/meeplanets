@@ -1,3 +1,15 @@
-import { MissionSandbox } from "@/components/FrontierSuite";
-import { LiveMissionPanel } from "@/components/LiveMissionPanel";
-export default function MissionControlPage() { return <div className="page"><div className="section-heading"><span className="eyebrow">OPERATIONS / 009</span><h1>Mission <em>Control</em></h1><p>Write safe, repeatable commands for a probe or rover and watch its route resolve in real time.</p></div><LiveMissionPanel /><MissionSandbox /></div>; }
+import { MissionOperationsSimulator } from "@/components/MissionOperationsSimulator";
+import { SectionHeading } from "@/components/SectionHeading";
+import { SharedAstronomyModel } from "@/components/SharedAstronomyModel";
+
+export default function MissionControlPage() {
+  return (
+    <div className="page">
+      <SectionHeading eyebrow="OPERATIONS / 009" title="Mission control">
+        Operate an orbiter above Mars, command a rover on the surface, and inspect simulated vehicle telemetry.
+      </SectionHeading>
+      <SharedAstronomyModel fixedPlanetId="mars" />
+      <MissionOperationsSimulator />
+    </div>
+  );
+}

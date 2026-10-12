@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { planets } from "@/lib/planets";
 import { SectionHeading } from "@/components/SectionHeading";
+import { SharedAstronomyModel } from "@/components/SharedAstronomyModel";
+import { useCosmosStore } from "@/store/useCosmosStore";
 
 const presets: Record<string, string[]> = {
   "EARTH / MARS": ["earth", "mars"],
@@ -12,19 +14,30 @@ const presets: Record<string, string[]> = {
 };
 
 export default function MatrixPage() {
-  const [selected, setSelected] = useState(["earth", "mars"]);
+  const [selected, setSelected] = useState(() => {
+    const activePlanet = useCosmosStore.getState().selectedPlanet;
+    const comparisonPlanet = activePlanet === "earth" ? "mars" : "earth";
+    return [activePlanet, comparisonPlanet];
+  });
+  const selectPlanet = useCosmosStore((state) => state.selectPlanet);
   const visible = planets.filter((planet) => selected.includes(planet.id));
-  const toggle = (id: string) =>
-    setSelected((current) =>
-      current.includes(id)
-        ? current.length > 2 ? current.filter((item) => item !== id) : current
-        : [...current, id],
-    );
+  const toggle = (id: string) => {
+    const current = selected;
+    if (current.includes(id)) {
+      const next = current.length > 2 ? current.filter((item) => item !== id) : current;
+      if (next !== current && id === useCosmosStore.getState().selectedPlanet) selectPlanet(next[0]);
+      setSelected(next);
+      return;
+    }
+    selectPlanet(id);
+    setSelected([...current, id]);
+  };
 
   return <div className="page">
     <SectionHeading eyebrow="COMPARATIVE INDEX / 002" title="The matrix">Build a side-by-side readout from two to eight worlds.</SectionHeading>
+    <SharedAstronomyModel onPlanetSelect={(id) => setSelected((current) => current.includes(id) ? current : [...current, id])} />
     <div className="matrix-tools">
-      <div className="chip-row">{Object.entries(presets).map(([label, ids]) => <button className="chip" key={label} onClick={() => setSelected(ids)}>{label}</button>)}</div>
+      <div className="chip-row">{Object.entries(presets).map(([label, ids]) => <button className="chip" key={label} onClick={() => { setSelected(ids); selectPlanet(ids[0]); }}>{label}</button>)}</div>
       <div className="chip-row">{planets.map((planet, index) => <button className={`chip ${selected.includes(planet.id) ? "active" : ""}`} key={planet.id} onClick={() => toggle(planet.id)}>{String(index + 1).padStart(2, "0")} {planet.name}</button>)}</div>
     </div>
     <div className="matrix matrix-comparison">
@@ -32,7 +45,7 @@ export default function MatrixPage() {
       {[
         ["CLASS", (id: string) => planets.find((planet) => planet.id === id)?.className],
         ["DIAMETER", (id: string) => planets.find((planet) => planet.id === id)?.diameter],
-        ["MASS / EARTH", (id: string) => ({ mercury: "0.055×", venus: "0.815×", earth: "1.000×", mars: "0.107×", jupiter: "317.8×", saturn: "95.2×", uranus: "14.5×", neptune: "17.1×" }[id])],
+        ["MASS / EARTH", (id: string) => `${planets.find((planet) => planet.id === id)?.massEarth.toLocaleString()}×`],
         ["GRAVITY", (id: string) => planets.find((planet) => planet.id === id)?.gravity],
         ["DISTANCE", (id: string) => planets.find((planet) => planet.id === id)?.distance],
         ["TEMPERATURE", (id: string) => planets.find((planet) => planet.id === id)?.temperature],

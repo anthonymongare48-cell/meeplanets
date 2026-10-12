@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Planet } from "@/lib/planets";
+import { planetImages } from "@/lib/planets";
 
 type FlightStage = "orbit" | "entry" | "surface";
 
@@ -63,6 +64,7 @@ export function SurfaceFlight({ planet }: { planet: Planet }) {
   const hasMeaningfulAtmosphere = planet.id !== "mercury";
   const waypoints = flightWaypoints[planet.id] ?? [];
   const color = atmosphericColors[planet.id] ?? "#a5a5a5";
+  const planetImage = planetImages[planet.id];
   const temperature = Number.parseFloat(planet.temperature);
   const depth = 1 - altitude / 1000;
   const displayedTemperature = Math.round(temperature + (isGasGiant ? depth * 15 : (1 - depth) * 30));
@@ -127,7 +129,7 @@ export function SurfaceFlight({ planet }: { planet: Planet }) {
       <div className="flight-viewport">
         <div className="flight-stars" />
         <div className="flight-atmosphere" />
-        {stage !== "surface" && <div className="flight-planet" aria-hidden="true"><span /></div>}
+        {stage !== "surface" && <div className="flight-planet" aria-hidden="true" style={{ "--flight-photo": planetImage ? `url("${planetImage.src}")` : "none", "--flight-photo-position": planetImage?.position ?? "center" } as React.CSSProperties}><span /></div>}
         {stage === "surface" && (
           <div className={`flight-terrain flight-terrain-${planet.id} ${isGasGiant ? "cloud-terrain" : ""}`}>
             <div className="terrain-horizon" />

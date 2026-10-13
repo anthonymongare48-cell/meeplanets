@@ -27,7 +27,7 @@ export const useCosmosStore = create<CosmosState>((set) => ({
   selectedPlanet: "saturn",
   simulationSpeed: 1,
   simulationPlaying: true,
-  simulationMode: "2D",
+  simulationMode: "3D",
   simulationZoom: 1,
   simulationFrameCap: 60,
   completedLessons: [],

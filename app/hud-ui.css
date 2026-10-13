@@ -1,0 +1,640 @@
+:root {
+  --hud-amber: #ff9d45;
+  --hud-cyan: #58d9f5;
+  --hud-ice: #b7efff;
+  --hud-line: #58d9f535;
+  --hud-surface: #0b121bea;
+  --hud-mono: "DM Mono", monospace;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 50% -18%, #16304455, transparent 52%),
+    radial-gradient(ellipse at 100% 48%, #1024302b, transparent 42%),
+    #070b11;
+}
+
+body::before {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background-image:
+    linear-gradient(#78d5f508 1px, transparent 1px),
+    linear-gradient(90deg, #78d5f508 1px, transparent 1px);
+  background-size: 52px 52px;
+  content: "";
+  mask-image: linear-gradient(to bottom, #0009, transparent 70%);
+  pointer-events: none;
+}
+
+body::after {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 12% 36%, #22c7e60b, transparent 32%),
+    radial-gradient(ellipse at 88% 72%, #ff9d4509, transparent 30%);
+  content: "";
+  pointer-events: none;
+  animation: hud-ambient 18s ease-in-out infinite alternate;
+}
+
+@keyframes hud-ambient {
+  from { opacity: .45; }
+  to { opacity: 1; }
+}
+
+::selection {
+  background: #35c6e766;
+  color: #f1fbff;
+}
+
+button {
+  position: relative;
+  border-radius: 4px;
+  font-family: var(--hud-mono);
+  transition:
+    color 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--hud-cyan);
+  outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  filter: saturate(.35);
+}
+
+.nav {
+  min-height: 72px;
+  border-bottom-color: #58d9f52b;
+  background: linear-gradient(90deg, #080d14f5, #0c131bea 55%, #080d14f5);
+  box-shadow: 0 1px #ffffff08, 0 10px 32px #0005;
+  backdrop-filter: blur(16px);
+}
+
+.brand-mark {
+  color: var(--hud-cyan);
+  filter: drop-shadow(0 0 9px #58d9f5a8);
+}
+
+.brand-sub {
+  color: #7e9aa8;
+}
+
+.primary-nav {
+  color: #8298a6;
+}
+
+.primary-nav a,
+.nav-menu-grid a {
+  transition: color 150ms ease, text-shadow 150ms ease, border-color 150ms ease;
+}
+
+.primary-nav a:hover,
+.nav-menu-grid a:hover,
+.back-link:hover {
+  color: var(--hud-ice);
+  text-shadow: 0 0 14px #58d9f577;
+}
+
+.audio-toggle,
+.menu-button {
+  min-height: 38px;
+  border: 1px solid #67cde344;
+  border-radius: 4px;
+  background: linear-gradient(145deg, #13212c, #0b1119);
+  color: #a9c1ce;
+  box-shadow: inset 0 1px #ffffff0b, 0 0 0 1px #0008;
+}
+
+.menu-button {
+  color: #e4f3f8;
+}
+
+.menu-button:hover,
+.audio-toggle:hover {
+  border-color: var(--hud-cyan);
+  background: linear-gradient(145deg, #18313d, #101c27);
+  color: var(--hud-ice);
+  box-shadow: 0 0 20px #47cde52b, inset 0 1px #ffffff12;
+}
+
+.nav-menu {
+  border-color: #58d9f54a;
+  background: #080f17f5;
+  box-shadow: 0 24px 70px #000c, inset 0 1px #9beaff12;
+}
+
+.eyebrow {
+  color: var(--hud-cyan);
+}
+
+.page {
+  position: relative;
+}
+
+.page > .section-heading {
+  position: relative;
+  padding-top: 18px;
+}
+
+.page > .section-heading::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(180px, 40vw);
+  height: 1px;
+  background: linear-gradient(90deg, var(--hud-cyan), #58d9f500);
+  box-shadow: 0 0 10px #58d9f555;
+  content: "";
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  width: 6px;
+  height: 6px;
+  border: 1px solid currentColor;
+  background: #58d9f52e;
+  box-shadow: 0 0 9px #58d9f5a6;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.section-heading h1,
+.hero h1 {
+  text-shadow: 0 0 35px #56d9f510;
+}
+
+.section-heading h1,
+.hero h1,
+.planet-hero h1 {
+  color: #eaf5f8;
+  text-wrap: balance;
+}
+
+.section-heading p {
+  color: #9aabb7;
+}
+
+.simulation-card,
+.astro-card,
+.advanced-card,
+.history-card,
+.metric,
+.physics-card,
+.suite-card,
+.planet-card,
+.settings-panel,
+.quiz-panel,
+.galaxy-data article,
+.planet-learning,
+.waypoint-lesson,
+.advanced-card {
+  border: 1px solid #58d9f52b;
+  border-radius: 3px;
+  background-color: #0a121bd9;
+  background-image:
+    linear-gradient(145deg, #a5efff0b, transparent 54%),
+    linear-gradient(0deg, #09121b80, #09121b80);
+  box-shadow: inset 0 1px #b7efff12, 0 16px 42px #0003;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.simulation-card:hover,
+.astro-card:hover,
+.advanced-card:hover,
+.history-card:hover,
+.metric:hover,
+.physics-card:hover,
+.suite-card:hover,
+.planet-card:hover,
+.galaxy-data article:hover {
+  border-color: #58d9f56b;
+  box-shadow: inset 0 1px #b7efff1c, 0 16px 42px #0005, 0 0 22px #58d9f512;
+}
+
+.telemetry-grid {
+  border-top-color: #58d9f53b;
+}
+
+.metric {
+  border-right-color: #58d9f52b;
+}
+
+.metric span,
+.astro-card label,
+.clock-row span,
+.nav-menu-grid .eyebrow {
+  color: #7f9cac;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+
+.metric strong,
+.zoom-readout strong {
+  color: #d8f7ff;
+  text-shadow: 0 0 20px #58d9f523;
+}
+
+.simulation-card h2,
+.astro-card h2,
+.advanced-card h2,
+.galaxy-data h3 {
+  color: #e3f4f8;
+}
+
+.simulation-grid,
+.astro-lab,
+.advanced-lab {
+  border-color: #58d9f538;
+  background-color: #58d9f52b;
+}
+
+footer {
+  border-top: 1px solid #58d9f52b;
+  color: #78909e;
+  font: 9px var(--hud-mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.button,
+.scene-director-form .button {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid #ffad63;
+  border-radius: 4px;
+  background: linear-gradient(110deg, #ff9b48, #ff712b);
+  color: #160f0a;
+  box-shadow: inset 0 1px #fff7d466, 0 5px 20px #ff7b2a29;
+  font: 600 10px var(--hud-mono);
+  letter-spacing: .11em;
+}
+
+.button:hover,
+.scene-director-form .button:hover {
+  border-color: #ffc68b;
+  background: linear-gradient(110deg, #ffc07c, #ff8a43);
+  box-shadow: inset 0 1px #fff9e599, 0 0 24px #ff9b4859;
+  transform: translateY(-1px);
+}
+
+.button:active,
+.scene-director-form .button:active {
+  transform: translateY(1px);
+}
+
+.small-btn,
+.text-button,
+.outline-btn,
+.chip,
+.learning-tab,
+.orbit-overlay-button,
+.orbit-speed-presets button,
+.orbit-control-deck .play-button,
+.galaxy-navigation-pad button,
+.galaxy-fullscreen-button,
+.flight-waypoint,
+.waypoint-pin {
+  border: 1px solid #58d9f540;
+  border-radius: 4px;
+  background: linear-gradient(145deg, #12202b, #0a1018);
+  color: #b8ccd5;
+  box-shadow: inset 0 1px #ffffff0a;
+}
+
+.small-btn,
+.text-button,
+.outline-btn,
+.chip,
+.orbit-overlay-button,
+.orbit-speed-presets button,
+.galaxy-navigation-pad button {
+  min-height: 36px;
+  padding: 8px 12px;
+  font: 10px var(--hud-mono);
+  letter-spacing: .07em;
+}
+
+.text-button,
+.outline-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.small-btn:hover:not(:disabled),
+.text-button:hover,
+.outline-btn:hover,
+.chip:hover,
+.chip.active,
+.learning-tab:hover,
+.learning-tab.active,
+.orbit-overlay-button:hover,
+.orbit-overlay-button.active,
+.orbit-speed-presets button:hover,
+.orbit-speed-presets button.active,
+.galaxy-navigation-pad button:hover,
+.flight-waypoint:hover,
+.flight-waypoint.selected,
+.waypoint-pin:hover,
+.waypoint-pin.selected,
+.waypoint-pin.objective {
+  border-color: var(--hud-cyan);
+  background: linear-gradient(145deg, #183745, #0e1d27);
+  color: #d4f7ff;
+  box-shadow: 0 0 18px #58d9f52b, inset 0 1px #ffffff12;
+}
+
+.outline-btn {
+  border-color: #58d9f580;
+  color: #a9ecf8;
+}
+
+.play-button,
+.orbit-control-deck .play-button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #58d9f5a0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 25%, #235364, #0b1a24 72%);
+  color: #c5f5ff;
+  box-shadow: inset 0 1px #ffffff24, 0 0 20px #58d9f52b;
+}
+
+.play-button:hover,
+.orbit-control-deck .play-button:hover {
+  border-color: var(--hud-cyan);
+  background: radial-gradient(circle at 35% 25%, #34758a, #102a35 72%);
+  box-shadow: inset 0 1px #ffffff30, 0 0 24px #58d9f56b;
+}
+
+.orbit-speed-slider,
+input[type="range"] {
+  accent-color: var(--hud-cyan);
+}
+
+.simulator-shell,
+.simulator-details,
+.orbit-control-deck,
+.scene-director-panel,
+.planet-learning,
+.waypoint-lesson,
+.galaxy-navigation,
+.galaxy-data article,
+.history-card,
+.simulation-card,
+.astro-card,
+.advanced-card {
+  border-color: #58d9f527;
+  box-shadow: inset 0 1px #b7efff09, 0 14px 44px #0003;
+}
+
+.simulator-details,
+.orbit-control-deck,
+.scene-director-panel,
+.planet-learning,
+.waypoint-lesson,
+.galaxy-navigation,
+.galaxy-data article,
+.history-card,
+.simulation-card,
+.astro-card,
+.advanced-card {
+  background-color: #0b121bd9;
+  background-image: linear-gradient(145deg, #a5efff08, transparent 55%);
+}
+
+.scene-director {
+  border-color: #58d9f580;
+  background: linear-gradient(145deg, #132633, #0a1119);
+  color: #c7f4ff;
+  box-shadow: 0 0 28px #0008, inset 0 1px #ffffff18;
+}
+
+.scene-director-toggle {
+  min-height: 54px;
+  padding: 12px 18px;
+  border: 1px solid #58d9f581;
+  border-radius: 6px;
+  background: linear-gradient(145deg, #12232eF5, #09131cf5);
+  color: #d8f7ff;
+  box-shadow: 0 12px 44px #0009, inset 0 1px #ffffff17, 0 0 20px #58d9f51a;
+}
+
+.scene-director-toggle:hover,
+.scene-director-toggle:focus-visible {
+  border-color: var(--hud-cyan);
+  background: linear-gradient(145deg, #193744f5, #0b1923f5);
+  color: #effcff;
+  box-shadow: 0 10px 38px #000a, 0 0 24px #58d9f54a;
+}
+
+.scene-director-toggle span {
+  color: var(--hud-cyan);
+  text-shadow: 0 0 12px #58d9f5a8;
+}
+
+.scene-director-panel {
+  border-color: #58d9f54d;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #111d27f5, #080e16f5);
+  box-shadow: 0 18px 70px #000c, inset 0 1px #b7efff13;
+}
+
+.scene-director-close {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #58d9f52e;
+  border-radius: 4px;
+  background: #0d1821;
+  color: #a7c0cc;
+}
+
+.scene-director-close:hover {
+  border-color: var(--hud-cyan);
+  color: var(--hud-ice);
+}
+
+.scene-director-form input {
+  border-color: #58d9f547;
+  border-radius: 4px;
+  background: #080f16;
+}
+
+.scene-director-form input:focus {
+  outline: 1px solid var(--hud-cyan);
+  border-color: var(--hud-cyan);
+  box-shadow: 0 0 16px #58d9f526;
+}
+
+.scene-quick-commands button {
+  min-height: 34px;
+  border: 1px solid #58d9f533;
+  border-radius: 4px;
+  background: #101a24;
+  color: #adc4ce;
+}
+
+.scene-quick-commands button:hover,
+.scene-quick-commands button:focus-visible {
+  border-color: var(--hud-cyan);
+  background: #15303a;
+  color: var(--hud-ice);
+  box-shadow: 0 0 16px #58d9f52e;
+}
+
+.scene-director-feedback {
+  border-color: #58d9f52e;
+  color: #b6d6df;
+}
+
+.scene-director:hover {
+  border-color: var(--hud-cyan);
+  box-shadow: 0 0 28px #58d9f540, inset 0 1px #ffffff20;
+}
+
+.galaxy-stage-shell {
+  border-color: #58d9f54d;
+  box-shadow: 0 28px 90px #0009, inset 0 1px #b7efff1a, 0 0 34px #58d9f512;
+}
+
+.galaxy-fullscreen-button {
+  min-height: 40px;
+  border-color: #58d9f55c;
+  background: linear-gradient(145deg, #10202bdf, #09121be8);
+  color: #c6f4ff;
+}
+
+.galaxy-fullscreen-button:hover {
+  border-color: var(--hud-cyan);
+  box-shadow: 0 0 20px #58d9f544;
+}
+
+.galaxy-navigation-readout strong {
+  color: var(--hud-ice);
+}
+
+.orbit-overlay-button {
+  min-height: 38px;
+}
+
+.orbit-speed-presets button {
+  min-height: 34px;
+}
+
+.orbit-control-deck .play-button {
+  min-height: 42px;
+}
+
+.button,
+.small-btn,
+.text-button,
+.outline-btn,
+.chip,
+.learning-tab,
+.orbit-overlay-button,
+.orbit-speed-presets button,
+.galaxy-navigation-pad button,
+.galaxy-fullscreen-button,
+.flight-waypoint,
+.waypoint-pin,
+.audio-toggle,
+.menu-button,
+.scene-director-toggle,
+.scene-director-close,
+.scene-quick-commands button {
+  border-radius: 2px;
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+}
+
+.button,
+.text-button,
+.outline-btn,
+.small-btn,
+.chip,
+.learning-tab,
+.orbit-overlay-button,
+.orbit-speed-presets button,
+.galaxy-navigation-pad button,
+.galaxy-fullscreen-button,
+.flight-waypoint,
+.waypoint-pin,
+.audio-toggle,
+.menu-button,
+.scene-director-toggle,
+.scene-director-close,
+.scene-quick-commands button {
+  box-shadow: inset 0 1px #ffffff17, 0 0 0 1px #58d9f51a;
+}
+
+.button {
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+}
+
+.button:focus-visible,
+.small-btn:focus-visible,
+.text-button:focus-visible,
+.outline-btn:focus-visible,
+.chip:focus-visible,
+.learning-tab:focus-visible,
+.orbit-overlay-button:focus-visible,
+.orbit-speed-presets button:focus-visible,
+.galaxy-navigation-pad button:focus-visible,
+.galaxy-fullscreen-button:focus-visible,
+.flight-waypoint:focus-visible,
+.waypoint-pin:focus-visible,
+.audio-toggle:focus-visible,
+.menu-button:focus-visible,
+.scene-director-toggle:focus-visible,
+.scene-director-close:focus-visible,
+.scene-quick-commands button:focus-visible {
+  outline: none;
+  filter: drop-shadow(0 0 3px var(--hud-cyan)) drop-shadow(0 0 1px #e9fbff);
+}
+
+@media (max-width: 700px) {
+  .nav {
+    gap: 12px;
+    padding: 0 4vw;
+  }
+
+  .brand-sub {
+    display: none;
+  }
+
+  .nav-menu {
+    left: 3vw;
+    right: 3vw;
+    padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    animation: none;
+  }
+
+  button {
+    scroll-behavior: auto;
+    transition: none;
+  }
+}

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import type { Planet } from "@/lib/planets";
-import { planetImages, planetModelColors, planetRotationSpeeds } from "@/lib/planets";
+import { orbitalArtworkTextures, planetModelColors, planetRotationSpeeds } from "@/lib/planets";
 
 type ScaleMode = "visible" | "proportional";
 
@@ -33,6 +33,21 @@ type PlanetMotion = {
   trueRadius: number;
   visibleDistance: number;
   trueDistance: number;
+};
+
+type AsteroidMotion = {
+  body: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshStandardMaterial>;
+  angle: number;
+  distance: number;
+  height: number;
+  speed: number;
+  spin: number;
+};
+
+type MeteorMotion = {
+  group: THREE.Group;
+  direction: THREE.Vector3;
+  progress: number;
 };
 
 const visibleDistances = [3.5, 5.2, 7.2, 9.2, 12.5, 16, 19.5, 22.5];
@@ -124,10 +139,9 @@ export function SolarSystemScene({
     renderer.toneMappingExposure = 1.15;
     host.appendChild(renderer.domElement);
     renderer.domElement.className = "solar-system-canvas";
-    renderer.domElement.setAttribute("aria-label", "Interactive three-dimensional solar system. Drag to orbit the camera and select planets.");
+    renderer.domElement.setAttribute("aria-label", "Interactive three-dimensional solar system with rotating planets, a moving asteroid belt, and a passing meteoroid. Drag to orbit the camera and select planets.");
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#080b12");
     const camera = new THREE.PerspectiveCamera(45, host.clientWidth / host.clientHeight, 0.1, 500);
     camera.position.set(0, 20, 36);
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -172,26 +186,89 @@ export function SolarSystemScene({
     scene.add(stars);
 
     const textureLoader = new THREE.TextureLoader();
+    const asteroidTexture = textureLoader.load("/planets/asteroid.jpg", undefined, undefined, (cause) => {
+      console.error("Unable to load the asteroid image for the orbital view.", cause);
+    });
+    asteroidTexture.colorSpace = THREE.SRGBColorSpace;
+    const asteroidMaterial = new THREE.MeshStandardMaterial({ map: asteroidTexture, color: "#ffffff", roughness: 1, metalness: 0.04 });
+    const asteroidGeometry = new THREE.IcosahedronGeometry(0.18, 1);
+    const asteroidPositions = asteroidGeometry.getAttribute("position");
+    for (let vertex = 0; vertex < asteroidPositions.count; vertex += 1) {
+      const variation = 0.82 + ((vertex * 37) % 19) / 50;
+      asteroidPositions.setXYZ(
+        vertex,
+        asteroidPositions.getX(vertex) * variation,
+        asteroidPositions.getY(vertex) * variation,
+        asteroidPositions.getZ(vertex) * variation,
+      );
+    }
+    asteroidGeometry.computeVertexNormals();
+    const asteroidMotion: AsteroidMotion[] = [];
+    for (let index = 0; index < 30; index += 1) {
+      const body = new THREE.Mesh(asteroidGeometry, asteroidMaterial);
+      const distance = 9.8 + ((index * 47) % 100) / 100 * 1.4;
+      const height = (((index * 29) % 100) / 100 - 0.5) * 0.75;
+      const size = 0.35 + ((index * 17) % 100) / 100 * 0.85;
+      body.scale.setScalar(size);
+      body.rotation.set(index * 0.61, index * 1.37, index * 0.83);
+      scene.add(body);
+      asteroidMotion.push({
+        body,
+        angle: (index * 137.5) * Math.PI / 180,
+        distance,
+        height,
+        speed: 0.035 + (index % 5) * 0.006,
+        spin: 0.15 + (index % 4) * 0.08,
+      });
+    }
+    const asteroidLabel = createTextSprite("Asteroid belt");
+    asteroidLabel.position.set(-10.6, 1.2, 0);
+    asteroidLabel.scale.set(4.4, 0.95, 1);
+    scene.add(asteroidLabel);
+
+    const meteorTexture = textureLoader.load("/planets/meteor.jpg", undefined, undefined, (cause) => {
+      console.error("Unable to load the meteor image for the orbital view.", cause);
+    });
+    meteorTexture.colorSpace = THREE.SRGBColorSpace;
+    const meteorMaterial = new THREE.MeshStandardMaterial({ map: meteorTexture, color: "#ffffff", roughness: 1, metalness: 0.02 });
+    const meteorBody = new THREE.Mesh(new THREE.SphereGeometry(0.28, 24, 18), meteorMaterial);
+    const meteorTrailGeometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(-3.4, 0, 0)]);
+    const meteorTrail = new THREE.Line(
+      meteorTrailGeometry,
+      new THREE.LineBasicMaterial({ color: "#ffc27c", transparent: true, opacity: 0.75 }),
+    );
+    const meteorGroup = new THREE.Group();
+    meteorGroup.add(meteorTrail, meteorBody);
+    const meteorLabel = createTextSprite("Meteoroid");
+    meteorLabel.position.set(0, 0.55, 0);
+    meteorLabel.scale.set(2.6, 0.72, 1);
+    meteorGroup.add(meteorLabel);
+    scene.add(meteorGroup);
+    const meteorMotion: MeteorMotion = {
+      group: meteorGroup,
+      direction: new THREE.Vector3(1, -0.3, -0.35).normalize(),
+      progress: 0,
+    };
+    meteorGroup.quaternion.setFromUnitVectors(new THREE.Vector3(1, 0, 0), meteorMotion.direction);
+
     const motion: PlanetMotion[] = [];
     planets.forEach((planet, index) => {
       const orbit = new THREE.Group();
       scene.add(orbit);
       const color = planetModelColors[planet.id];
       const material = new THREE.MeshStandardMaterial({ color, roughness: 0.82, metalness: 0.04 });
-      const image = planetImages[planet.id];
-      if (image) {
-        textureLoader.load(
-          image.src,
-          (texture) => {
-            texture.colorSpace = THREE.SRGBColorSpace;
-            material.map = texture;
-            material.color.set("#ffffff");
-            material.needsUpdate = true;
-          },
-          undefined,
-          (cause) => console.error(`Unable to load the ${planet.name} texture from ${image.src}.`, cause),
-        );
-      }
+      const texturePath = orbitalArtworkTextures[planet.id];
+      textureLoader.load(
+        texturePath,
+        (texture) => {
+          texture.colorSpace = THREE.SRGBColorSpace;
+          material.map = texture;
+          material.color.set("#ffffff");
+          material.needsUpdate = true;
+        },
+        undefined,
+        (cause) => console.error(`Unable to load the ${planet.name} artwork texture from ${texturePath}.`, cause),
+      );
       const radius = visibleRadii[index];
       const body = new THREE.Mesh(new THREE.SphereGeometry(radius, 32, 32), material);
       body.position.x = visibleDistances[index];
@@ -278,12 +355,29 @@ export function SolarSystemScene({
     sceneApiRef.current = sceneApi;
     let animationFrame = 0;
     let previousTime = 0;
+    let inViewport = true;
     const animate = (time: number) => {
-      animationFrame = window.requestAnimationFrame(animate);
       const delta = previousTime === 0 ? 0 : Math.min((time - previousTime) / 1000, 0.05);
       previousTime = time;
       if (playingRef.current) {
         sun.rotation.y += delta * 0.12;
+        asteroidMotion.forEach((item) => {
+          item.angle += delta * item.speed * speedRef.current;
+          item.body.position.set(
+            Math.cos(item.angle) * item.distance,
+            item.height,
+            Math.sin(item.angle) * item.distance,
+          );
+          item.body.rotation.x += delta * item.spin * speedRef.current;
+          item.body.rotation.y += delta * item.spin * 0.72 * speedRef.current;
+        });
+        meteorMotion.progress = (meteorMotion.progress + delta * speedRef.current / 14) % 1;
+        meteorMotion.group.position.set(
+          THREE.MathUtils.lerp(-24, 24, meteorMotion.progress),
+          THREE.MathUtils.lerp(9, -7, meteorMotion.progress),
+          THREE.MathUtils.lerp(12, -8, meteorMotion.progress),
+        );
+        meteorBody.rotation.y += delta * speedRef.current * 0.5;
         for (const item of motion) {
           item.angle += delta * speedRef.current * 0.12 / orbitalPeriods[planets.indexOf(item.data)];
           item.orbit.rotation.y = item.angle;
@@ -316,9 +410,27 @@ export function SolarSystemScene({
           item.orbitLine.userData.distance = distance;
         }
       });
+      asteroidLabel.visible = labelsRef.current;
+      meteorLabel.visible = labelsRef.current;
       controls.update();
       renderer.render(scene, camera);
+      if (inViewport && !document.hidden) {
+        animationFrame = window.requestAnimationFrame(animate);
+      }
     };
+    const updateAnimation = () => {
+      window.cancelAnimationFrame(animationFrame);
+      previousTime = 0;
+      if (inViewport && !document.hidden) {
+        animationFrame = window.requestAnimationFrame(animate);
+      }
+    };
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      inViewport = entry.isIntersecting;
+      updateAnimation();
+    });
+    visibilityObserver.observe(host);
+    document.addEventListener("visibilitychange", updateAnimation);
 
     const resizeObserver = new ResizeObserver(() => {
       if (!host.clientWidth || !host.clientHeight) return;
@@ -327,14 +439,28 @@ export function SolarSystemScene({
       renderer.setSize(host.clientWidth, host.clientHeight);
     });
     resizeObserver.observe(host);
-    animationFrame = window.requestAnimationFrame(animate);
+    updateAnimation();
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
+      visibilityObserver.disconnect();
+      document.removeEventListener("visibilitychange", updateAnimation);
       resizeObserver.disconnect();
       renderer.domElement.removeEventListener("pointerdown", onPointerDown);
       renderer.domElement.removeEventListener("pointerup", onPointerUp);
       controls.dispose();
+      asteroidGeometry.dispose();
+      asteroidTexture.dispose();
+      asteroidMaterial.dispose();
+      meteorBody.geometry.dispose();
+      meteorTexture.dispose();
+      meteorMaterial.dispose();
+      meteorTrailGeometry.dispose();
+      (meteorTrail.material as THREE.Material).dispose();
+      asteroidLabel.material.map?.dispose();
+      asteroidLabel.material.dispose();
+      meteorLabel.material.map?.dispose();
+      meteorLabel.material.dispose();
       for (const item of motion) {
         item.body.geometry.dispose();
         item.body.material.map?.dispose();

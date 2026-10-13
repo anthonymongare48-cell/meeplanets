@@ -16,15 +16,19 @@ const primary = [
 ];
 
 const tools = [
+  ["/labs", "All Labs"],
+  ["/simulations", "All Simulations"],
   ["/galaxy", "Milky Way Galaxy"],
   ["/sun", "Sun"],
   ["/moon", "Moon"],
   ["/observatory", "Observatory"],
   ["/learning-lab", "Learning Lab"],
+  ["/agent-prompts", "Agent Prompt Library"],
   ["/interactive-physics", "Physics Lab"],
   ["/astrometry", "Astrometry Lab"],
   ["/catalog", "Small Bodies Catalog"],
   ["/advanced-observatory", "Advanced Observatory"],
+  ["/command-center", "Mission Command Dashboard"],
   ["/mission-control", "Mission Control"],
   ["/mining-exchange", "Mining Exchange"],
   ["/cultural-history", "Cultural History"],

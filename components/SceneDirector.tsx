@@ -1,11 +1,25 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { planets } from "@/lib/planets";
 import { useCosmosStore } from "@/store/useCosmosStore";
 
-const quickCommands = ["Show Saturn", "Set speed to 20x", "Switch to 3D", "Open the Milky Way"];
+const quickActions = [
+  { label: "Saturn", command: "Show Saturn" },
+  { label: "Earth", command: "Show Earth" },
+  { label: "Mars", command: "Show Mars" },
+  { label: "Play", command: "Play simulation" },
+  { label: "Pause", command: "Pause simulation" },
+  { label: "Speed 1×", command: "Set speed to 1x" },
+  { label: "Speed 5×", command: "Set speed to 5x" },
+  { label: "Speed 20×", command: "Set speed to 20x" },
+  { label: "3D view", command: "Switch to 3D" },
+  { label: "Top-down 2D", command: "Switch to 2D" },
+  { label: "Milky Way", command: "Open the Milky Way" },
+  { label: "Deep space", command: "Open deep space" },
+  { label: "Observatory", command: "Open observatory" },
+];
 
 export function SceneDirector() {
   const router = useRouter();
@@ -17,6 +31,17 @@ export function SceneDirector() {
   const [open, setOpen] = useState(false);
   const [command, setCommand] = useState("");
   const [feedback, setFeedback] = useState("Try a command such as “Show Saturn” or “Set speed to 5x.”");
+  const commandInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    commandInput.current?.focus();
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [open]);
 
   function execute(rawCommand: string) {
     const normalized = rawCommand.trim().toLowerCase();
@@ -133,22 +158,26 @@ export function SceneDirector() {
   return (
     <aside className={`scene-director ${open ? "is-open" : ""}`}>
       {open && (
-        <section className="scene-director-panel" aria-label="Scene Director">
+        <section className="scene-director-panel" id="scene-director-panel" role="dialog" aria-labelledby="scene-director-title" aria-modal="false">
           <div className="scene-director-heading">
-            <div><span className="eyebrow">LOCAL COMMANDS</span><h2>Scene Director</h2></div>
-            <button className="scene-director-close" onClick={() => setOpen(false)} aria-label="Close Scene Director">×</button>
+          <div><span className="eyebrow">QUICK CONTROLS</span><h2 id="scene-director-title">Scene Director</h2></div>
+          <button className="scene-director-close" type="button" onClick={() => setOpen(false)} aria-label="Close Scene Director">×</button>
           </div>
-          <p className="scene-director-description">Control the simulator with supported plain-language commands. Commands are interpreted on this device; no AI service is connected.</p>
+        <p className="scene-director-description">Choose an action below, or type a command. These controls work locally with the solar-system scene.</p>
           <form className="scene-director-form" onSubmit={submit}>
             <label className="sr-only" htmlFor="scene-command">Scene command</label>
-            <input id="scene-command" value={command} onChange={(event) => setCommand(event.target.value)} placeholder="e.g. Show Saturn" autoComplete="off" />
+          <input ref={commandInput} id="scene-command" value={command} onChange={(event) => setCommand(event.target.value)} placeholder="Try: Show Jupiter" autoComplete="off" />
             <button type="submit" className="button">GO</button>
           </form>
-          <div className="scene-quick-commands">{quickCommands.map((item) => <button key={item} onClick={() => { setCommand(item); execute(item); }}>{item}</button>)}</div>
-          <p className="scene-director-feedback" role="status" aria-live="polite">{feedback}</p>
+        <div className="scene-director-actions">
+          <div className="scene-director-action-group"><h3>Choose a world</h3><div className="scene-quick-commands">{quickActions.slice(0, 3).map((item) => <button type="button" key={item.label} onClick={() => { setCommand(item.command); execute(item.command); }}>{item.label}</button>)}</div></div>
+          <div className="scene-director-action-group"><h3>Simulation</h3><div className="scene-quick-commands">{quickActions.slice(3, 8).map((item) => <button type="button" key={item.label} onClick={() => { setCommand(item.command); execute(item.command); }}>{item.label}</button>)}</div></div>
+          <div className="scene-director-action-group"><h3>View & explore</h3><div className="scene-quick-commands">{quickActions.slice(8).map((item) => <button type="button" key={item.label} onClick={() => { setCommand(item.command); execute(item.command); }}>{item.label}</button>)}</div></div>
+        </div>
+        <p className="scene-director-feedback" role="status" aria-live="polite">{feedback}</p>
         </section>
       )}
-      <button className="scene-director-toggle" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
+      <button className="scene-director-toggle" type="button" aria-expanded={open} aria-controls="scene-director-panel" aria-label={open ? "Close Scene Director" : "Open Scene Director"} onClick={() => setOpen((value) => !value)}>
         <span aria-hidden="true">✦</span> {open ? "CLOSE DIRECTOR" : "SCENE DIRECTOR"}
       </button>
     </aside>

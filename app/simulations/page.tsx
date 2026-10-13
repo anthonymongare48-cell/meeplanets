@@ -2,89 +2,122 @@ import Link from "next/link";
 import { SectionHeading } from "@/components/SectionHeading";
 import { SharedAstronomyModel } from "@/components/SharedAstronomyModel";
 
-const matrix = [
+const simulations = [
+  {
+    href: "/#orbital-view",
+    label: "01 / SOLAR SYSTEM",
+    title: "Orbital simulator",
+    text: "Watch the eight planets orbit and rotate alongside the asteroid belt and a passing meteoroid. Select a planet, adjust speed, or switch projection.",
+    visual: "exchange",
+    readout: "ORBITAL MECHANICS · LIVE",
+  },
+  {
+    href: "/mission-control",
+    label: "02 / EXPLORATION MISSIONS",
+    title: "Probe & rover missions",
+    text: "Pilot the Mars rover, visit waypoints, scan terrain, and run safe mission scripts in the mission-control simulator.",
+    visual: "gravity",
+    readout: "MISSION OPERATIONS",
+  },
   {
     href: "/astrometry",
-    label: "01 / STARS, SHADOWS & SIGNALS",
+    label: "03 / STARS & SIGNALS",
     title: "Transit observatory",
-    text: "Move a world across its star, measure the simulated light-curve dip, and switch the signal band.",
+    text: "Move a world across its star, measure the simulated light-curve dip, and inspect the signal.",
     visual: "shadow",
     readout: "TRANSIT PHOTOMETRY",
   },
   {
     href: "/advanced-observatory",
-    label: "02 / LIVE DATA & 3D RENDERING",
+    label: "04 / ADVANCED INSTRUMENTS",
     title: "Observatory console",
-    text: "Explore satellite tracking, eclipse geometry, coordinate pins, and instrument rendering controls.",
+    text: "Explore satellite tracking, eclipse geometry, coordinate pins, collision flight, and instrument rendering controls.",
     visual: "render",
-    readout: "ORBITAL INSTRUMENTS",
+    readout: "OBSERVATION & TRACKING",
+  },
+  {
+    href: "/interactive-physics",
+    label: "05 / GRAVITY & EXOPLANETS",
+    title: "Interactive physics",
+    text: "Adjust a gravity-assist encounter and explore the climate of a fictional exoplanet.",
+    visual: "gravity",
+    readout: "PHYSICS LAB",
+  },
+  {
+    href: "/mining-exchange",
+    label: "06 / ASTEROID DYNAMICS",
+    title: "Asteroid exchange",
+    text: "Deploy extractors across a seeded asteroid belt and trade simulated water and metal.",
+    visual: "exchange",
+    readout: "MINING & MARKET",
+  },
+  {
+    href: "/observatory",
+    label: "07 / TIME & CONSTELLATIONS",
+    title: "Astronomy observatory",
+    text: "Scrub the astronomy timeline, inspect constellation geometry, and explore identified telemetry.",
+    visual: "shadow",
+    readout: "OBSERVING TOOLS",
+  },
+  {
+    href: "/learning-lab",
+    label: "08 / GUIDED LEARNING",
+    title: "Learning lab",
+    text: "Explore structured lessons, planetary cross-sections, interactive notes, and narrated instruction.",
+    visual: "render",
+    readout: "CLASSROOM MODE",
   },
   {
     href: "/catalog",
-    label: "03 / METEORS & MINOR WORLDS",
-    title: "Minor-body tracker",
-    text: "Classify asteroids, meteoroids, meteorites, and distant small worlds in the catalog.",
+    label: "09 / SMALL BODIES",
+    title: "Meteors & minor worlds",
+    text: "Explore the asteroid and meteoroid artwork, classify meteorites, and browse the minor-body catalog.",
     visual: "meteors",
     readout: "SMALL-BODY CATALOG",
   },
   {
-    href: "/interactive-physics",
-    label: "04 / GRAVITY & EXOPLANETS",
-    title: "Gravity field lab",
-    text: "Adjust a gravity-assist encounter and tune the climate of a fictional exoplanet.",
+    href: "/matrix",
+    label: "10 / PLANET COMPARISON",
+    title: "Planet comparison matrix",
+    text: "Compare two to eight worlds by size, mass, gravity, distance, temperature, and moons.",
+    visual: "render",
+    readout: "COMPARATIVE TELEMETRY",
+  },
+  {
+    href: "/soundscape",
+    label: "11 / AMBIENT AUDIO",
+    title: "Space soundscape",
+    text: "Choose an environment, shape the sound intensity, and play the generated ambient audio.",
+    visual: "shadow",
+    readout: "AUDIO EXPERIENCE",
+  },
+  {
+    href: "/audio-expedition",
+    label: "12 / GUIDED JOURNEY",
+    title: "Audio expedition",
+    text: "Take a narrated journey through the solar system and its planetary destinations.",
+    visual: "meteors",
+    readout: "NARRATED EXPLORATION",
+  },
+  {
+    href: "/quiz",
+    label: "13 / KNOWLEDGE CHECK",
+    title: "Astronomy quiz",
+    text: "Test your astronomy knowledge with an interactive quiz and review your results.",
     visual: "gravity",
-    readout: "TEACHING MODEL",
-  },
-  {
-    href: "/mining-exchange",
-    label: "05 / ASTEROID EXCHANGE & DYNAMICS",
-    title: "Asteroid exchange",
-    text: "Deploy extractors across a deterministic belt and trade simulated water and metal.",
-    visual: "exchange",
-    readout: "VIRTUAL MARKET",
-  },
-];
-
-const additionalSimulations = [
-  {
-    href: "/",
-    label: "01 / ORBITAL SIMULATOR",
-    title: "Solar system",
-    text: "Run the eight-planet orbital model. Select worlds, switch between TOP 2D and 3D presentation, scrub time, zoom, and change simulation speed.",
-    action: "LAUNCH ORBITAL VIEW",
-  },
-  {
-    href: "/mission-control",
-    label: "06 / MISSION CONTROL",
-    title: "Probe & rover missions",
-    text: "Write safe commands for a custom probe or rover, run the mission sequence, and inspect its simulated route.",
-    action: "ENTER MISSION CONTROL",
-  },
-  {
-    href: "/observatory",
-    label: "07 / OBSERVATORY",
-    title: "Time & signal",
-    text: "Scrub the historical astronomy timeline, inspect constellation geometry, and review clearly identified telemetry displays.",
-    action: "OPEN OBSERVATORY",
-  },
-  {
-    href: "/learning-lab",
-    label: "08 / CLASSROOM MODE",
-    title: "Learning lab",
-    text: "Follow structured lessons, draw over visualizations, pin notes, reveal planetary cross-sections, and use narrated instruction.",
-    action: "START A LESSON",
+    readout: "MISSION ASSESSMENT",
   },
 ];
 
 export default function SimulationsPage() {
   return <div className="page">
-    <SectionHeading eyebrow="INTERACTIVE SYSTEMS / 007" title="Cosmic simulation matrix">Select an instrument to open its working model. Visualizations and readouts are illustrative simulations unless a panel explicitly identifies an external data source.</SectionHeading>
+    <SectionHeading eyebrow="INTERACTIVE SYSTEMS / 007" title="Simulation center">All interactive models, mission tools, and learning experiences in one place. Choose a simulation to open its controls and explore.</SectionHeading>
+    <p className="description"><Link href="/labs">Looking for the hands-on labs? Browse the complete lab directory ↗</Link></p>
     <SharedAstronomyModel />
-    <div className="simulation-matrix">{matrix.map((simulation) => <Link className={`matrix-panel matrix-panel--${simulation.visual}`} href={simulation.href} key={simulation.href}>
+    <div className="simulation-matrix">{simulations.map((simulation) => <Link className={`matrix-panel matrix-panel--${simulation.visual}`} href={simulation.href} key={simulation.href}>
       <div className="matrix-panel__top"><span>{simulation.label}</span><span className="matrix-panel__live"><i /> READY</span></div>
       <div className="matrix-panel__visual" aria-hidden="true"><i /><i /><i /><i /><i /><b /><em /></div>
       <div className="matrix-panel__body"><span className="matrix-panel__readout">{simulation.readout}</span><h2>{simulation.title}</h2><p>{simulation.text}</p><span className="matrix-panel__launch">OPEN SIMULATION <b>↗</b></span></div>
     </Link>)}</div>
-    <section className="simulation-additional"><div className="simulation-additional__heading"><span className="eyebrow">MORE INSTRUMENTS</span><h2>Continue exploring</h2></div><div className="simulation-additional__grid">{additionalSimulations.map((simulation) => <article className="simulation-card" key={simulation.href}><span className="eyebrow">{simulation.label}</span><h3>{simulation.title}</h3><p>{simulation.text}</p><Link className="button" href={simulation.href}>{simulation.action} <span>↗</span></Link></article>)}</div></section>
   </div>;
 }

@@ -37,6 +37,17 @@ export const planetImages: Partial<Record<Planet["id"], PlanetImage>> = {
   neptune: { src: "/planets/neptune.jpg" },
 };
 
+export const orbitalArtworkTextures: Record<Planet["id"], string> = {
+  mercury: "/planets/orbital-artwork/mercury.jpg",
+  venus: "/planets/orbital-artwork/venus.jpg",
+  earth: "/planets/orbital-artwork/earth.jpg",
+  mars: "/planets/orbital-artwork/mars.jpg",
+  jupiter: "/planets/orbital-artwork/jupiter.jpg",
+  saturn: "/planets/orbital-artwork/saturn.jpg",
+  uranus: "/planets/orbital-artwork/uranus.jpg",
+  neptune: "/planets/orbital-artwork/neptune.jpg",
+};
+
 export const planets: Planet[] = [
   { id: "mercury", name: "MERCURY", className: "TERRESTRIAL", tagline: "The swift world", accent: "#b8a99a", distance: "0.39 AU", temperature: "167°C", gravity: "3.70 m/s²", moons: 0, massEarth: 0.0553, diameter: "4,879 km", day: "1,408 h", year: "88 days", atmosphere: "Trace exosphere", geology: "Cratered silicate surface", weather: "Airless extremes: 427°C (800°F) by day and −184°C (−300°F) at night.", minerals: "Iron, nickel, and sulfur core beneath a silicate mantle and crust.", rings: "None", escapeVelocity: "4.3 km/s", axialTilt: "0.03°", surfacePressure: "Trace", notableMoons: "None", description: "A cratered, airless world racing around the Sun in just 88 days." },
   { id: "venus", name: "VENUS", className: "TERRESTRIAL", tagline: "The veiled world", accent: "#d99b54", distance: "0.72 AU", temperature: "464°C", gravity: "8.87 m/s²", moons: 0, massEarth: 0.815, diameter: "12,104 km", day: "5,832 h", year: "225 days", atmosphere: "CO₂ · nitrogen", geology: "Volcanic plains", weather: "A 464°C (867°F) runaway greenhouse under thick CO₂ and sulfuric-acid clouds.", minerals: "Dense iron-nickel core with basaltic volcanic rock and silicate minerals.", rings: "None", escapeVelocity: "10.4 km/s", axialTilt: "177.4° retrograde", surfacePressure: "92 bar", notableMoons: "None", description: "A cloud-shrouded furnace with a runaway greenhouse atmosphere." },

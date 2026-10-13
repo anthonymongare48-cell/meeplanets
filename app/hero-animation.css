@@ -1,0 +1,57 @@
+.orbit-art {
+  overflow: hidden;
+}
+
+.orbit-art > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hero-orbit-track {
+  fill: none;
+  stroke: #5a3b2b;
+  stroke-width: 1;
+  opacity: 0.78;
+}
+
+.hero-orbit-sun {
+  fill: #ff792e;
+  filter: drop-shadow(0 0 15px #ff8a35) drop-shadow(0 0 34px #ff6b2266);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hero-sun-pulse 3s ease-in-out infinite;
+}
+
+.hero-orbit-planet {
+  fill: #f5eee1;
+  filter: drop-shadow(0 0 7px #ffffffb0);
+}
+
+.hero-orbit-planet--2 {
+  fill: #79cce4;
+  filter: drop-shadow(0 0 8px #6ac4e4);
+}
+
+.hero-orbit-planet--3 {
+  fill: #ffb86b;
+  filter: drop-shadow(0 0 8px #ff9c53);
+}
+
+@keyframes hero-sun-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orbit-sun {
+    animation: none;
+  }
+}

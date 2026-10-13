@@ -6,9 +6,42 @@
   transform: none;
 }
 
+.orbit-stage.orbit-simulation-stage {
+  min-height: 520px;
+  background: radial-gradient(ellipse at center, #171b23, #07090d 78%);
+}
+
 .solar-system-scene {
   position: absolute;
   inset: 0;
+}
+
+.solar-system-scene-lazy {
+  position: absolute;
+  inset: 0;
+}
+
+.solar-system-scene-loading {
+  display: grid;
+  place-items: center;
+  color: #8ba3af;
+  font: 8px var(--mono);
+  letter-spacing: .12em;
+}
+
+.solar-system-scene-loading:not(:empty)::after {
+  width: 18px;
+  height: 18px;
+  margin-left: 10px;
+  border: 1px solid #58d9f533;
+  border-top-color: #58d9f5;
+  border-radius: 50%;
+  content: "";
+  animation: solar-renderer-spin 1s linear infinite;
+}
+
+@keyframes solar-renderer-spin {
+  to { transform: rotate(360deg); }
 }
 
 .solar-system-canvas {
@@ -115,6 +148,30 @@
 .orbit-speed-presets button.active {
   border-color: #e59b4d99;
   color: #f0b66f;
+}
+
+.orbit-control-deck .play-button {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.orbit-control-deck .orbit-control-label {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.orbit-control-deck .orbit-speed-slider {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+
+.orbit-control-deck .orbit-speed-presets {
+  grid-column: 1 / -1;
+  grid-row: 3;
+}
+
+.orbit-simulation-stage .solar-system-scene {
+  z-index: 1;
 }
 
 .orbit-stage:active {

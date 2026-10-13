@@ -47,6 +47,9 @@ export function MissionOperationsSimulator() {
   const [orbitAngle, setOrbitAngle] = useState(0);
   const [orbitAltitude, setOrbitAltitude] = useState(343);
   const [orbitSpeed, setOrbitSpeed] = useState(4.2);
+  const [orbitAltitudeCenter, setOrbitAltitudeCenter] = useState(343);
+  const [orbitSpeedCenter, setOrbitSpeedCenter] = useState(4.2);
+  const [autonavActive, setAutonavActive] = useState(false);
   const [logs, setLogs] = useState<Log[]>([
     { kind: "ok", text: "UPLINK ESTABLISHED · MARS RELAY 02" },
     { kind: "info", text: "PERSEVERANCE · AUTONOMOUS NAVIGATION READY" },
@@ -56,9 +59,11 @@ export function MissionOperationsSimulator() {
   const [missionClock, setMissionClock] = useState(3 * 3600 + 42 * 60 + 18);
   const timer = useRef<number | undefined>(undefined);
   const scriptTimer = useRef<number | undefined>(undefined);
+  const waypointTimer = useRef<number | undefined>(undefined);
   const headingRef = useRef(heading);
   const roverPositionRef = useRef<Point>(roverPosition);
   const scanCountRef = useRef(scanCount);
+  const orbitPhaseRef = useRef(0);
 
   const mapPoint = (point: Point): Point => ({
     x: clamp(145 + (point.x - 47) * 2.4, 12, 288),
@@ -69,7 +74,17 @@ export function MissionOperationsSimulator() {
     setLogs((current) => [...current.slice(-7), { kind, text }]);
   };
 
+  const stopAutonav = () => {
+    if (waypointTimer.current !== undefined) window.clearInterval(waypointTimer.current);
+    waypointTimer.current = undefined;
+    setAutonavActive(false);
+  };
+
   const drive = (dx: number, dy: number) => {
+    if (waypointTimer.current !== undefined) {
+      stopAutonav();
+      addLog("warning", "AUTONAV INTERRUPTED · MANUAL CONTROL");
+    }
     const current = roverPositionRef.current;
     const next = { x: clamp(current.x + dx, 8, 92), y: clamp(current.y + dy, 25, 82) };
     roverPositionRef.current = next;
@@ -80,6 +95,11 @@ export function MissionOperationsSimulator() {
     setBattery((value) => Math.max(8, value - 0.08));
   };
 
+  const driveByHeading = (offset: number, distance: number) => {
+    const angle = (headingRef.current + offset) * Math.PI / 180;
+    drive(Math.cos(angle) * distance, -Math.sin(angle) * distance);
+  };
+
   const scan = () => {
     scanCountRef.current += 1;
     setScanCount(scanCountRef.current);
@@ -88,6 +108,7 @@ export function MissionOperationsSimulator() {
   };
 
   const turn = (degrees: number) => {
+    stopAutonav();
     const next = (headingRef.current + degrees + 360) % 360;
     headingRef.current = next;
     setHeading(next);
@@ -100,9 +121,13 @@ export function MissionOperationsSimulator() {
   };
 
   const runScript = () => {
+    stopAutonav();
     stopScript();
-    const lines = script.split("\n").map((line) => line.trim()).filter(Boolean).slice(0, 30);
+    const lines = script.split("\n").map((line) => line.trim()).filter(Boolean);
     try {
+      if (lines.length > 30) {
+        throw new Error("Mission sequences are limited to 30 commands.");
+      }
       const commands = lines.map((line, index) => {
         const match = line.match(/^([a-z]+)\s*\((.*)\)$/i);
         const command = match?.[1]?.toLowerCase();
@@ -151,40 +176,64 @@ export function MissionOperationsSimulator() {
   useEffect(() => {
     if (!orbitActive) return;
     timer.current = window.setInterval(() => {
-      setOrbitAngle((angle) => (angle + 1.3) % 360);
-      setOrbitAltitude((altitude) => 343 + Math.round(Math.sin((altitude - 343) / 8 + Date.now() / 7000) * 8));
-      setOrbitSpeed((velocity) => Number((4.2 + Math.sin(velocity + Date.now() / 5000) * 0.06).toFixed(2)));
+      const angle = (orbitPhaseRef.current + 1.3) % 360;
+      orbitPhaseRef.current = angle;
+      setOrbitAngle(angle);
+      setOrbitAltitude(orbitAltitudeCenter + Math.round(Math.sin(angle * Math.PI / 180) * 8));
+      setOrbitSpeed(Number((orbitSpeedCenter + Math.sin(angle * Math.PI / 4) * 0.06).toFixed(2)));
     }, 50);
     return () => {
       if (timer.current !== undefined) window.clearInterval(timer.current);
     };
-  }, [orbitActive]);
+  }, [orbitActive, orbitAltitudeCenter, orbitSpeedCenter]);
 
   useEffect(() => () => {
     if (scriptTimer.current !== undefined) window.clearTimeout(scriptTimer.current);
+    if (waypointTimer.current !== undefined) window.clearInterval(waypointTimer.current);
   }, []);
 
   const onSurfaceClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
     const point = { x: clamp(((event.clientX - rect.left) / rect.width) * 100, 8, 92), y: clamp(((event.clientY - rect.top) / rect.height) * 100, 25, 82) };
-    roverPositionRef.current = point;
+    if (waypointTimer.current !== undefined) window.clearInterval(waypointTimer.current);
     setTarget(point);
-    setRoverPosition(point);
-    setDistance((value) => value + 2.6);
-    setBattery((value) => Math.max(8, value - 0.3));
-    setRoverTrack((track) => [...track.slice(-13), mapPoint(point)]);
-    addLog("info", "WAYPOINT ACCEPTED · AUTONAV ROUTE UPDATED");
+    setAutonavActive(true);
+    addLog("info", "WAYPOINT ACCEPTED · AUTONAV ROUTE PLANNED");
+    waypointTimer.current = window.setInterval(() => {
+      const current = roverPositionRef.current;
+      const dx = point.x - current.x;
+      const dy = point.y - current.y;
+      const remaining = Math.hypot(dx, dy);
+      const step = Math.min(remaining, 1.2);
+      if (remaining < 0.2) {
+        stopAutonav();
+        addLog("ok", "WAYPOINT REACHED · ROVER HOLD");
+        return;
+      }
+      const next = { x: current.x + dx / remaining * step, y: current.y + dy / remaining * step };
+      roverPositionRef.current = next;
+      setRoverPosition(next);
+      setDistance((value) => value + step * 0.18);
+      setBattery((value) => Math.max(8, value - 0.02));
+      setRoverTrack((track) => [...track.slice(-13), mapPoint(next)]);
+      const nextHeading = (Math.atan2(-dy, dx) * 180 / Math.PI + 360) % 360;
+      headingRef.current = nextHeading;
+      setHeading(nextHeading);
+      if (remaining <= step) {
+        stopAutonav();
+        addLog("ok", "WAYPOINT REACHED · ROVER HOLD");
+      }
+    }, 50);
   };
 
   const handleSurfaceKey = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-    const vectors: Record<string, [number, number]> = {
-      ArrowUp: [0, -3], w: [0, -3], ArrowDown: [0, 3], s: [0, 3],
-      ArrowLeft: [-3, 0], a: [-3, 0], ArrowRight: [3, 0], d: [3, 0],
+    const directions: Record<string, number> = {
+      ArrowUp: 0, w: 0, ArrowLeft: 90, a: 90, ArrowDown: 180, s: 180, ArrowRight: 270, d: 270,
     };
-    const vector = vectors[event.key] ?? vectors[event.key.toLowerCase()];
-    if (vector) {
+    const direction = directions[event.key] ?? directions[event.key.toLowerCase()];
+    if (direction !== undefined) {
       event.preventDefault();
-      drive(vector[0], vector[1]);
+      driveByHeading(direction, 3);
     }
   };
 
@@ -234,7 +283,7 @@ export function MissionOperationsSimulator() {
             <span className="orbiter-stage-caption">AREOCENTRIC INERTIAL FRAME · NOT TO SCALE</span>
             <div className="orbiter-controls">
               <button disabled={mode !== "orbiter"} onClick={() => { setOrbitActive((active) => !active); addLog("info", orbitActive ? "ORBITER HOLD · PROPULSION SAFE" : "ORBITER RESUMED · NOMINAL ORBIT"); }} aria-label={orbitActive ? "Pause orbiter" : "Resume orbiter"}>{orbitActive ? "Ⅱ PAUSE ORBIT" : "▶ RESUME ORBIT"}</button>
-              <button disabled={mode !== "orbiter"} onClick={() => { setOrbitAltitude(250); setOrbitSpeed(4.6); addLog("ok", "ORBITAL TRIM BURN · PERIAPSIS 250 KM"); }}>TRIM ORBIT ↗</button>
+              <button disabled={mode !== "orbiter"} onClick={() => { setOrbitAltitudeCenter(250); setOrbitSpeedCenter(4.6); setOrbitAltitude(250); setOrbitSpeed(4.6); addLog("ok", "ORBITAL TRIM BURN · PERIAPSIS 250 KM"); }}>TRIM ORBIT ↗</button>
             </div>
           </div>
           <div className="orbiter-micro-panels">
@@ -247,7 +296,7 @@ export function MissionOperationsSimulator() {
         <article className={`mission-vehicle-panel ${mode === "rover" ? "vehicle-selected" : ""}`}>
           <div className="mission-panel-heading">
             <div><span className="eyebrow">SURFACE OPERATIONS / AUTONAV</span><h3>PERSEVERANCE ROVER</h3></div>
-            <span className="mission-state state-live">● DRIVING</span>
+            <span className={`mission-state ${mode === "rover" ? "state-live" : ""}`}>{mode !== "rover" ? "○ STANDBY" : autonavActive ? "● AUTONAV" : "● ACTIVE"}</span>
           </div>
           <div className="rover-stage">
             <div className="rover-sky" />
@@ -265,15 +314,16 @@ export function MissionOperationsSimulator() {
             </div>
             <div className="rover-stage-hud"><span>LOCAL TERRAIN MODEL</span><span>CAM 01 · STEREO</span><span>DRIVE SOL {distance.toFixed(1)} m</span></div>
             <div className="rover-direction-pad">
-              <button disabled={mode !== "rover"} onClick={() => drive(0, -4)} aria-label="Drive rover forward">▲</button>
-              <button disabled={mode !== "rover"} onClick={() => drive(-4, 0)} aria-label="Drive rover left">◀</button>
-              <button disabled={mode !== "rover"} onClick={() => drive(0, 4)} aria-label="Drive rover backward">▼</button>
-              <button disabled={mode !== "rover"} onClick={() => drive(4, 0)} aria-label="Drive rover right">▶</button>
+              <button disabled={mode !== "rover"} onClick={() => driveByHeading(0, 4)} aria-label="Drive rover forward">▲</button>
+              <button disabled={mode !== "rover"} onClick={() => driveByHeading(90, 4)} aria-label="Drive rover left">◀</button>
+              <button disabled={mode !== "rover"} onClick={() => driveByHeading(180, 4)} aria-label="Drive rover backward">▼</button>
+              <button disabled={mode !== "rover"} onClick={() => driveByHeading(270, 4)} aria-label="Drive rover right">▶</button>
             </div>
+            {autonavActive && <button type="button" className="rover-autonav-stop" disabled={mode !== "rover"} onClick={stopAutonav}>STOP AUTONAV</button>}
           </div>
           <div className="rover-telemetry">
             <span>ROVER UNIT: PERSEVERANCE <b>/ SOL 284</b></span>
-            <div><span>BATTERY <strong>{battery.toFixed(0)}%</strong></span><span>DRIVE DISTANCE <strong>{distance.toFixed(1)} m</strong></span><span>SCIENCE SCANS <strong>{scanCount}</strong></span><span>HEADING <strong>{Math.round(heading)}° NE</strong></span></div>
+            <div><span>BATTERY <strong>{battery.toFixed(0)}%</strong></span><span>DRIVE DISTANCE <strong>{distance.toFixed(1)} m</strong></span><span>SCIENCE SCANS <strong>{scanCount}</strong></span><span>HEADING <strong>{Math.round(heading)}° {["E", "NE", "N", "NW", "W", "SW", "S", "SE"][Math.round(heading / 45) % 8]}</strong></span></div>
           </div>
           <div className="rover-command-buttons">
             <button disabled={mode !== "rover"} onClick={scan}>⌕ RUN SCIENCE SCAN</button>
@@ -288,7 +338,7 @@ export function MissionOperationsSimulator() {
           <div className="mission-lower-heading"><span className="eyebrow">SAFE COMMAND INTERPRETER</span><span>MAX 30 COMMANDS</span></div>
           <textarea value={script} onChange={(event) => setScript(event.target.value)} spellCheck={false} aria-label="Rover mission command script" />
           <div className="mission-script-actions">
-            <button className="script-run" onClick={runScript} disabled={running}>{running ? "SEQUENCE RUNNING…" : "▶ EXECUTE ROVER SEQUENCE"}</button>
+            <button className="script-run" onClick={runScript} disabled={running || mode !== "rover"}>{running ? "SEQUENCE RUNNING…" : "▶ EXECUTE ROVER SEQUENCE"}</button>
             <button onClick={stopScript}>STOP</button>
             <button onClick={() => { stopScript(); setScript("say('Perseverance online')\ndrive(12)\nscan()\nturn(35)\ndrive(8)"); }}>LOAD SAMPLE</button>
           </div>

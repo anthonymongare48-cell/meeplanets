@@ -1,0 +1,474 @@
+.galaxy-stage-shell {
+  isolation: isolate;
+}
+
+.galaxy-stage-shell:focus-visible {
+  outline: 2px solid #ffb36b;
+  outline-offset: 4px;
+}
+
+.galaxy-stage-shell:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+  background: #05070b;
+}
+
+.galaxy-fullscreen-button {
+  position: absolute;
+  z-index: 4;
+  top: 16px;
+  left: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid #ffffff35;
+  border-radius: 8px;
+  background: #080c16d9;
+  color: #f6d3a4;
+  cursor: pointer;
+  font: 9px "DM Mono", monospace;
+  letter-spacing: .08em;
+  backdrop-filter: blur(10px);
+}
+
+.galaxy-fullscreen-button:hover,
+.galaxy-fullscreen-button:focus-visible {
+  border-color: #ffb36b;
+  background: #201a13ed;
+  outline: 2px solid #ffb36b;
+  outline-offset: 2px;
+}
+
+.galaxy-fullscreen-button svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.galaxy-fullscreen-error {
+  position: absolute;
+  z-index: 4;
+  top: 62px;
+  left: 16px;
+  max-width: min(360px, calc(100% - 32px));
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid #ff7b6b70;
+  border-radius: 8px;
+  background: #210e0ee8;
+  color: #ffd2cb;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.galaxy-artwork-mover {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  transition: transform 180ms ease-out;
+  will-change: transform;
+}
+
+.galaxy-artwork-rotator {
+  position: absolute;
+  z-index: 0;
+  inset: -50%;
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.galaxy-stage-shell.is-rotating .galaxy-artwork-rotator {
+  animation: galaxy-artwork-rotate 90s linear infinite;
+  will-change: transform;
+}
+
+.galaxy-stage-shell.is-rotation-paused .galaxy-artwork-rotator {
+  animation-play-state: paused;
+}
+
+.galaxy-map-zoom {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.galaxy-stage-artwork {
+  z-index: 0;
+  object-fit: cover;
+  object-position: center;
+  will-change: transform;
+}
+
+.galaxy-hotspots {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.galaxy-hotspots a {
+  cursor: pointer;
+  fill: transparent;
+  pointer-events: all;
+  stroke: transparent;
+  stroke-width: 3;
+  transition: fill 160ms ease, stroke 160ms ease;
+}
+
+.galaxy-hotspots a:hover,
+.galaxy-hotspots a:focus-visible {
+  fill: #ffb36b26;
+  stroke: #ffd19a;
+  outline: none;
+}
+
+.galaxy-hotspots a:focus-visible {
+  stroke-width: 5;
+}
+
+.galaxy-orbit-map {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.galaxy-orbit-track {
+  fill: none;
+  stroke: #f2d4ae50;
+  stroke-dasharray: 2 6;
+  stroke-width: 1;
+  pointer-events: none;
+}
+
+.galaxy-orbit-map a {
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.galaxy-asteroid-belt-link ellipse {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 14;
+  pointer-events: all;
+}
+
+.galaxy-asteroid-belt-link:hover ellipse,
+.galaxy-asteroid-belt-link:focus-visible ellipse {
+  stroke: #ffc17b45;
+}
+
+.galaxy-asteroid-belt-link:focus-visible {
+  outline: none;
+}
+
+.galaxy-orbiting-body {
+  stroke: #fff1d2;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 5px currentColor);
+  transition: r 140ms ease, stroke-width 140ms ease;
+}
+
+.galaxy-orbiting-ring {
+  fill: none;
+  stroke: #f8dca7;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 4px #f8dca7);
+  pointer-events: none;
+}
+
+.galaxy-orbiting-moon {
+  fill: #d9dddf;
+  stroke: #fff;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 5px #e7f0ff);
+}
+
+.galaxy-orbiting-meteoroid {
+  fill: #ffca82;
+  stroke: #fff2cb;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 6px #ffab5c);
+  transition: fill 140ms ease;
+}
+
+.galaxy-orbit-map a:hover .galaxy-orbiting-moon,
+.galaxy-orbit-map a:focus-visible .galaxy-orbiting-moon,
+.galaxy-orbit-map a:hover .galaxy-orbiting-meteoroid,
+.galaxy-orbit-map a:focus-visible .galaxy-orbiting-meteoroid {
+  fill: #fff;
+}
+
+.galaxy-orbit-map a:hover .galaxy-orbiting-body,
+.galaxy-orbit-map a:focus-visible .galaxy-orbiting-body {
+  r: 1.5em;
+  stroke-width: 3;
+}
+
+.galaxy-orbit-map a:focus-visible {
+  outline: none;
+}
+
+.galaxy-orbit-map a:focus-visible .galaxy-orbiting-ring,
+.galaxy-orbit-map a:focus-visible .galaxy-orbiting-sun {
+  stroke: #fff;
+  stroke-width: 4;
+}
+
+.galaxy-orbiting-sun {
+  fill: #ffbe69;
+  stroke: #fff1c3;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 13px #ff9a48) drop-shadow(0 0 25px #f99141aa);
+}
+
+.galaxy-orbiting-asteroid {
+  fill: #e4c19a;
+  stroke: #fff0cf;
+  stroke-width: 1;
+  filter: drop-shadow(0 0 4px #ffd69f);
+  transition: r 140ms ease;
+}
+
+.galaxy-asteroid-belt a:hover .galaxy-orbiting-asteroid,
+.galaxy-asteroid-belt a:focus-visible .galaxy-orbiting-asteroid {
+  r: 8;
+}
+
+.galaxy-asteroid-belt a:focus-visible {
+  outline: none;
+}
+
+.galaxy-artwork-shimmer {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(110deg, transparent 15%, #93d9ff0b 42%, #ffd19c22 50%, #93d9ff0b 58%, transparent 84%),
+    linear-gradient(180deg, #05070b1c, #05070b05 42%, #05070b50);
+  background-size: 220% 100%, 100% 100%;
+  animation: galaxy-star-sweep 18s linear infinite;
+}
+
+.galaxy-artwork-label {
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  z-index: 2;
+  color: #fff0cf;
+  font: 9px "DM Mono", monospace;
+  letter-spacing: .12em;
+  text-shadow: 0 2px 12px #000;
+}
+
+.galaxy-overlay {
+  z-index: 2;
+}
+
+.galaxy-overlay,
+.galaxy-artwork-label {
+  pointer-events: none;
+}
+
+.galaxy-overlay a,
+.galaxy-overlay button {
+  pointer-events: auto;
+}
+
+.galaxy-overlay button {
+  cursor: pointer;
+}
+
+.galaxy-overlay h2 {
+  min-height: 3.3em;
+  line-height: 1.1;
+}
+
+.galaxy-satellite {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid #ffcc8caa;
+  border-radius: 50%;
+  background: #080c16c9;
+  box-shadow: 0 0 22px #ffb36b77;
+  color: #ffcf94;
+  transform: translate(-50%, -50%);
+  transition: left 180ms ease-out, top 180ms ease-out;
+  pointer-events: none;
+}
+
+.galaxy-satellite svg {
+  width: 24px;
+  height: 24px;
+  fill: #ffca86;
+  stroke: #ffca86;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 0 4px #ffc886);
+}
+
+.galaxy-flight-path {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.galaxy-flight-path path {
+  fill: none;
+  stroke: #ffc17b77;
+  stroke-dasharray: 2 2.5;
+  stroke-width: .35;
+}
+
+.galaxy-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 16px;
+  padding: 18px 22px;
+  border: 1px solid #ffffff1c;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #ffffff0b, #ffffff03);
+}
+
+.galaxy-navigation-readout {
+  display: grid;
+  gap: 7px;
+}
+
+.galaxy-navigation-readout strong {
+  color: #f4d4a8;
+  font: 11px "DM Mono", monospace;
+  letter-spacing: .08em;
+}
+
+.galaxy-navigation-readout > span:last-child {
+  color: #b1b7c3;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.galaxy-navigation-pad {
+  display: grid;
+  grid-template: repeat(2, 38px) / repeat(3, 38px);
+  gap: 5px;
+  flex: 0 0 auto;
+}
+
+.galaxy-navigation-pad button {
+  border: 1px solid #ffffff25;
+  border-radius: 9px;
+  background: #101722;
+  color: #f6d3a4;
+  cursor: pointer;
+  font-size: 17px;
+  transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+}
+
+.galaxy-navigation-pad button:hover,
+.galaxy-navigation-pad button:focus-visible {
+  border-color: #ffb36b;
+  background: #292016;
+  outline: none;
+}
+
+.galaxy-navigation-pad button:active {
+  transform: scale(.94);
+}
+
+.galaxy-navigation-pad button:first-child {
+  grid-column: 2;
+}
+
+.galaxy-navigation-pad button:nth-child(2) {
+  grid-column: 1;
+}
+
+.galaxy-navigation-pad button:nth-child(3) {
+  grid-column: 2;
+}
+
+.galaxy-navigation-pad button:nth-child(4) {
+  grid-column: 3;
+}
+
+.galaxy-navigation-pad button:nth-child(5) {
+  grid-column: 2;
+}
+
+@keyframes galaxy-artwork-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes galaxy-star-sweep {
+  from {
+    background-position: 120% 0, center;
+  }
+
+  to {
+    background-position: -120% 0, center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .galaxy-artwork-mover,
+  .galaxy-map-zoom,
+  .galaxy-artwork-shimmer,
+  .galaxy-stage-shell.is-rotating .galaxy-artwork-rotator {
+    animation: none;
+    will-change: auto;
+    transition: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .galaxy-navigation {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .galaxy-navigation-pad {
+    align-self: center;
+  }
+
+  .galaxy-artwork-label {
+    top: 14px;
+    right: 14px;
+    font-size: 7px;
+  }
+}

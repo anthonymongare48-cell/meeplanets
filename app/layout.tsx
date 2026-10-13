@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./hud-ui.css";
+import "./command-center.css";
+import "./hero-animation.css";
 import "./interaction-effects.css";
 import "./space-science-missions.css";
 import "./mission-operations.css";
@@ -8,6 +11,7 @@ import "./simulation-matrix.css";
 import "./shared-astronomy-model.css";
 import "./planet-interior.css";
 import "./planetary-science.css";
+import "./celestial-bodies.css";
 import { Navigation } from "@/components/Navigation";
 import { SceneDirector } from "@/components/SceneDirector";
 
